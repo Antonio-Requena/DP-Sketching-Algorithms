@@ -87,7 +87,7 @@ def mostrar_resultados(frecuencia_real:pd.DataFrame, f_estimada_num: dict):
 
     # Cálculo del error
     errores = {key: abs(f_real_num[key] - f_estimada_num[key]) for key in f_real_num}
-    sum = np.sum(list(errores.values()))
+    sum = np.mean(list(errores.values()))
 
     print(f"El error obtenido es de un {((sum/N)*100):.2f}%")
 
