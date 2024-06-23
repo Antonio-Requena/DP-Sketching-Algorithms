@@ -67,9 +67,8 @@ class privateSPF:
 
     def generar_diccionario(self,T):
         X = {}
-        Q_l = []
-        Q_w = []
-
+        Q_l = [None]*len(self.posiciones)
+        Q_w = [None]*255
         alfabeto = string.ascii_lowercase  # abcdefghijklmnopqrstuvwxyz
         combinaciones = [a + b for a in alfabeto for b in alfabeto]
 
@@ -89,8 +88,6 @@ class privateSPF:
 
         for w in range(256):
             print(f'Porcentaje del diccionario generado: {(w/256)*100}%')
-            Q_w[w] = []
-        
             q_l = []
             for q in Q_l:
                 i = Q_l.index(q)
