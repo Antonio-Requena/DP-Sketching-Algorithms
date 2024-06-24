@@ -49,15 +49,15 @@ class privateSPF:
     
     def cliente(self,s):
         l = random.choice(self.posiciones)
-        r = str(l) + s[l-1:l+1]
+        r = str(self.h(s)) + s[l-1:l+1]
         return self.CMS_2[self.posiciones.index(l)].client(r), self.CMS.client(s),l
     
     def servidor(self,alpha, beta, l):
         self.CMS_2[self.posiciones.index(l)].actualizar_matriz_sketch(alpha[0],alpha[1])
-        self.CMS.actualizar_matriz_sketch(beta[0],alpha[1])
+        self.CMS.actualizar_matriz_sketch(beta[0],beta[1])
 
     def separar_hash(self,clave):
-        match = re.match(r"(\d+)([a-zA-Z]{2})", clave)
+        match = re.match(r"(\d+)([a-zA\s]{2})", clave)
         if match:
             hash = match.group(1)
             caracteres = match.group(2)
@@ -68,8 +68,8 @@ class privateSPF:
     def generar_diccionario(self,T):
         X = {}
         Q_l = [None]*len(self.posiciones)
-        Q_w = [None]*255
-        alfabeto = string.ascii_lowercase  # abcdefghijklmnopqrstuvwxyz
+        Q_w = [[]]*256
+        alfabeto = string.ascii_lowercase + ' ' # abcdefghijklmnopqrstuvwxyz + espacio
         combinaciones = [a + b for a in alfabeto for b in alfabeto]
 
         for l in self.posiciones:
@@ -79,23 +79,23 @@ class privateSPF:
             dict = {}
             # Iterar sobre los valores w de 0 a 255
             for w in range(256):
+                print(f'Generando diccionario [l: {l} - w:{w}]')
                 for c in combinaciones:
                     clave = str(w) + c
-                    dict[clave] = self.CMS_2[pos].estimar_d(c)
+                    dict[clave] = self.CMS_2[pos].estimar_d(clave)
 
             # Seleccionamos las T más frecuentes
             Q_l[pos] = sorted(dict, key=dict.get, reverse=True)[:T]
 
         for w in range(256):
-            print(f'Porcentaje del diccionario generado: {(w/256)*100}%')
-            q_l = []
+            q_l =  [[] for _ in range(len(self.posiciones))]
             for q in Q_l:
                 i = Q_l.index(q)
                 for clave in q:
                     aux = self.separar_hash(clave)
-                    if aux[0] == w:
+                    if aux[0] == str(w):
                         q_l[i].append(aux[1])
-
+            
             Q_w[w] = [  # Generamos las posibles concatenaciones q1 || q3 || ... || q9 : w || ql
                 q1 + q3 + q5 + q7 + q9
                 for q1 in q_l[0]
@@ -104,7 +104,7 @@ class privateSPF:
                 for q7 in q_l[3]
                 for q9 in q_l[4]
             ]
-
+            
             for x in Q_w[w]:
                 X[x] = self.CMS.estimar_d(x)
         
@@ -114,7 +114,6 @@ class privateSPF:
         counter = 0
         for d in self.dataset:
             counter += 1
-            print(f'Porcentaje del dataset procesado: {(counter/len(self.dataset))*100}%')
             alpha, beta, l = self.cliente(d)
             self.servidor(alpha, beta, l)
 
@@ -154,17 +153,19 @@ def cargar_csv(nombre_archivo):
 
 if __name__ == "__main__":
     # Parametros dependientes del caso de uso
-    k = 2048
+    k = 256
     epsilon = 2
-    m = 1024
-    k_prima = 2048
+    m = 128
+    k_prima = 256
     epsilon_prima = 6
-    m_prima = 1024
-    T = 3
+    m_prima = 128
+    T = 10
 
     # Generamos un flujo artificial de N datos 
-    N = 10**3
-    dataset,frecuencias = cargar_csv('andalusian_words.csv')
+    N = 10**4
+    dataset,frecuencias = cargar_csv('/Users/an.reqrod/Desktop/TFG/DP-Sketching-Algorithims/Sequence Fragment Puzzle/andalusian_words.csv')
+    
+
     SPF = privateSPF(epsilon,epsilon_prima,k,k_prima,m,m_prima,dataset,T)
     SPF.execute()
     print(frecuencias)
