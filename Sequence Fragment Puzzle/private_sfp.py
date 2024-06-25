@@ -1,4 +1,3 @@
-from sympy import primerange
 import random
 import numpy as np
 import importlib.util
@@ -10,6 +9,8 @@ import csv
 from collections import Counter
 from progress.bar import Bar
 import argparse
+import time
+from tabulate import tabulate
 
 # Enlace con la ruta para las utilidades (funciones de uso comun)
 file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..',  'utils', 'utils.py'))
@@ -117,17 +118,41 @@ class privateSPF:
 
     def execute(self):
         bar = Bar('Procesando datos de los clientes', max=len(self.dataset), suffix='%(percent)d%%')
+        t_cliente = 0
+        t_server = 0
+
         for d in self.dataset:
+            inicio = time.time()
             alpha, beta, l = self.cliente(d)
+            fin = time.time()
+            t_cliente += (fin - inicio) * 1000
+
+            inicio = time.time()
             self.servidor(alpha, beta, l)
+            fin = time.time()
+            t_server += (fin - inicio) * 1000
             bar.next()
         bar.finish()
-
+        t_cliente = t_cliente/len(self.dataset)
+        t_server = t_server/len(self.dataset)
+        
+        inicio = time.time()
         X = self.generar_diccionario(self.T)
+        fin = time.time()
+        t_dict = (fin - inicio)
 
-        X = {k: v for k, v in sorted(X.items(), key=lambda item: item[1], reverse=True)}
-        for clave, valor in X.items():
-            print(f"{clave}: {valor}")
+        # Tabla de tiempos de ejecución
+        tiempos = [['Cliente', str("{:.4f}".format(t_cliente)) + ' ms'],['Servidor (Actualizar Matriz)',str(t_server) + ' ms'],['Servidor (Generar diccionario)',str(t_dict) + ' s']]
+        tabla_tiempos = tabulate(tiempos, headers=["Algoritmo", "Tiempo de Ejecución"], tablefmt="pretty")
+
+        X = {k: v for k, v in sorted(X.items(), key=lambda item: item[1], reverse=True) if v >= 0}
+        X = [[clave, "{:.4f}".format(valor)] for clave, valor in X.items()]
+
+        print('\n RESULTADOS OBTENIDOS \n')
+        tabla_cadenas = tabulate(X, headers=["Cadena", "Frecuencia estimada"], tablefmt="pretty")
+        print(tabla_cadenas + '\n')
+
+        return tabla_tiempos
                 
 
 def generar_csv(N):
@@ -170,7 +195,7 @@ if __name__ == "__main__":
     parser.add_argument("-m2", type=int, required=True, help="m prima (Número de columnas de la matriz de sketch para las piezas).")
     parser.add_argument("-T", type=int, required=True, help='Umbral que acota superiormente la cantidad de cadenas estimadas a generar.')
     parser.add_argument("-N", type=int, required=True, help='Numero de elementos del dataset generado.')
-    parser.add_argument("-vs","--verbose_time", action="store_true", help="Se desea obtener los tiempos de ejecución de las funciones.")
+    parser.add_argument("--verbose_time", action="store_true", help="Se desea obtener los tiempos de ejecución de las funciones.")
     
     args = parser.parse_args()
 
@@ -182,9 +207,10 @@ if __name__ == "__main__":
     print('Configurando parámetros iniciales... ')
  
     SPF = privateSPF(args.e,args.e2,args.k,args.k2,args.m,args.m2,dataset,args.T)
-    SPF.execute()
+    tiempos = SPF.execute()
 
-    print(frecuencias)
+    if(args.verbose_time): print(tiempos)
+    
 
     
 
