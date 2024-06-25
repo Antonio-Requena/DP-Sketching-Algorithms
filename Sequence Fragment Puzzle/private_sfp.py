@@ -8,6 +8,8 @@ import string
 import re
 import csv
 from collections import Counter
+from progress.bar import Bar
+import argparse
 
 # Enlace con la ruta para las utilidades (funciones de uso comun)
 file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..',  'utils', 'utils.py'))
@@ -71,6 +73,7 @@ class privateSPF:
         Q_w = [[]]*256
         alfabeto = string.ascii_lowercase + ' ' # abcdefghijklmnopqrstuvwxyz + espacio
         combinaciones = [a + b for a in alfabeto for b in alfabeto]
+        bar = Bar('Generando el diccionario', max=len(self.posiciones)*256, suffix='%(percent)d%%')
 
         for l in self.posiciones:
             pos = self.posiciones.index(l)
@@ -79,13 +82,15 @@ class privateSPF:
             dict = {}
             # Iterar sobre los valores w de 0 a 255
             for w in range(256):
-                print(f'Generando diccionario [l: {l} - w:{w}]')
+                bar.next()
                 for c in combinaciones:
                     clave = str(w) + c
                     dict[clave] = self.CMS_2[pos].estimar_d(clave)
 
             # Seleccionamos las T más frecuentes
             Q_l[pos] = sorted(dict, key=dict.get, reverse=True)[:T]
+
+        bar.finish()
 
         for w in range(256):
             q_l =  [[] for _ in range(len(self.posiciones))]
@@ -111,11 +116,12 @@ class privateSPF:
         return X
 
     def execute(self):
-        counter = 0
+        bar = Bar('Procesando datos de los clientes', max=len(self.dataset), suffix='%(percent)d%%')
         for d in self.dataset:
-            counter += 1
             alpha, beta, l = self.cliente(d)
             self.servidor(alpha, beta, l)
+            bar.next()
+        bar.finish()
 
         X = self.generar_diccionario(self.T)
 
@@ -149,25 +155,35 @@ def cargar_csv(nombre_archivo):
             valor =  row[0][:10].ljust(10) # Normalizamos las cadenas
             dataset.append(valor)
     
-    return dataset, Counter(dataset)
+    return dataset, dict(Counter(dataset))
 
 if __name__ == "__main__":
-    # Parametros dependientes del caso de uso
-    k = 256
-    epsilon = 2
-    m = 128
-    k_prima = 256
-    epsilon_prima = 6
-    m_prima = 128
-    T = 10
 
-    # Generamos un flujo artificial de N datos 
-    N = 10**4
-    dataset,frecuencias = cargar_csv('/Users/an.reqrod/Desktop/TFG/DP-Sketching-Algorithims/Sequence Fragment Puzzle/andalusian_words.csv')
+    parser = argparse.ArgumentParser(description="Algoritmo Sequence Fragment Puzzle para la estimación de frecuencias a partir de un diccionario desconocido.")
     
+    # Añadimos los argumentos requeridos
+    parser.add_argument("-e", type=int, required=True, help="Epsilon.")
+    parser.add_argument("-e2", type=int, required=True, help="Epsilon prima.")
+    parser.add_argument("-k", type=int, required=True, help="k (Número de filas de la matriz de sketch para la secuencia).")
+    parser.add_argument("-k2", type=int, required=True, help="k prima (Número de filas de la matriz de sketch para las piezas)")
+    parser.add_argument("-m", type=int, required=True, help="m (Número de columnas de la matriz de sketch para la secuencia).")
+    parser.add_argument("-m2", type=int, required=True, help="m prima (Número de columnas de la matriz de sketch para las piezas).")
+    parser.add_argument("-T", type=int, required=True, help='Umbral que acota superiormente la cantidad de cadenas estimadas a generar.')
+    parser.add_argument("-N", type=int, required=True, help='Numero de elementos del dataset generado.')
+    parser.add_argument("-vs","--verbose_time", action="store_true", help="Se desea obtener los tiempos de ejecución de las funciones.")
+    
+    args = parser.parse_args()
 
-    SPF = privateSPF(epsilon,epsilon_prima,k,k_prima,m,m_prima,dataset,T)
+    # Generamos un flujo artificial de N datos y lo almacenamos en un CSV
+    N = 10**4
+    generar_csv(args.N)
+    dataset,frecuencias = cargar_csv('andalusian_words.csv')
+    
+    print('Configurando parámetros iniciales... ')
+ 
+    SPF = privateSPF(args.e,args.e2,args.k,args.k2,args.m,args.m2,dataset,args.T)
     SPF.execute()
+
     print(frecuencias)
 
     
