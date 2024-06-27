@@ -1,7 +1,0 @@
-10000    0.007    0.000    0.024    0.000 numeric.py:289(full)
-10000    0.055    0.000    0.160    0.000 private_hcms.py:48(cliente)
-10000    0.029    0.000    0.029    0.000 private_hcms.py:64(actualizar_matriz_sketch)
-1        0.007    0.007    0.007    0.007 private_hcms.py:69(trasponer_M)
-8        0.004    0.001    1.439    0.180 private_hcms.py:72(estimar_d)
-8        0.195    0.024    1.414    0.177 private_hcms.py:73(<listcomp>)
-1        0.005    0.005    1.640    1.640 private_hcms.py:75(execute)
