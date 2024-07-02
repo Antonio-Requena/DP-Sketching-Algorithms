@@ -200,7 +200,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Generamos un flujo artificial de N datos y lo almacenamos en un CSV
-    N = 10**4
     generar_csv(args.N)
     dataset,frecuencias = cargar_csv('andalusian_words.csv')
     

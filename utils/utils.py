@@ -76,17 +76,18 @@ def mostrar_resultados(frecuencia_real:pd.DataFrame, f_estimada_num: dict):
     # Preparar los datos para su posterior impresión por pantalla
     tabla_datos = []
     for elemento in f_real_num:
-        frec_real = f_real_num[elemento]
-        porc_real = f_real_percent[elemento]
-        frec_estimada = f_estimada_num[elemento]
-        porc_estimada = (frec_estimada /N) * 100
-        tabla_datos.append([elemento, frec_real, f"{porc_real}%", f"{frec_estimada:.2f}", f"{porc_estimada:.2f}%"])
+        if elemento in f_estimada_num:
+            frec_real = f_real_num[elemento]
+            porc_real = f_real_percent[elemento]
+            frec_estimada = f_estimada_num[elemento]
+            porc_estimada = (frec_estimada /N) * 100
+            tabla_datos.append([elemento, frec_real, f"{porc_real}%", f"{frec_estimada:.2f}", f"{porc_estimada:.2f}%"])
     
     print("RESULTADOS OBTENIDOS")
     print(tabulate(tabla_datos, headers=["Elemento", "Frecuencia Real", "Porcentaje Real", "Frecuencia Estimada", "Porcentaje Estimado"], tablefmt="pretty"))
 
     # Cálculo del error
-    errores = {key: abs(f_real_num[key] - f_estimada_num[key]) for key in f_real_num}
+    errores = {key: abs(f_real_num[key] - f_estimada_num[key]) for key in f_estimada_num}
     sum = np.mean(list(errores.values()))
 
     print(f"El error obtenido es de un {((sum/N)*100):.2f}%")

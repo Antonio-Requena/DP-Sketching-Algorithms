@@ -1,10 +1,13 @@
-import math
 import numpy as np
 import random
 import importlib.util
 import os
 import bloomfilter as bf
 from sklearn import linear_model
+import argparse
+import time
+from progress.bar import Bar
+from tabulate import tabulate
 
 # Enlace con la ruta para las utilidades (funciones de uso comun)
 file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..',  'utils', 'utils.py'))
@@ -40,16 +43,37 @@ class Rappor:
             return 1 if random.random() < p else 0
     
     def execute(self):
+        bar = Bar('Procesando datos de los clientes', max=len(self.dataset), suffix='%(percent)d%%')
         Informes = []
+        t_cliente = 0
         for d in self.dataset:
+            inicio = time.time()
             Informes.append(self.cliente(d))
-        
+            fin = time.time()
+            t_cliente += (fin - inicio) * 1000
+            bar.next()
+        bar.finish()
+        t_cliente = t_cliente/len(self.dataset)
+
+        t_server = 0
+        print('\n' + 'Ejecutando algortimo del servidor' + '\n')
+        inicio = time.time()
         X = self.crear_matriz_diseno()
         contadores_estimados = self.estimar_contadores(Informes)
         Y = np.mat(contadores_estimados).T
         estimacion = self.regresion_lasso(X,Y)
+        fin = time.time()
+        t_server = (fin - inicio) * 1000
 
-        print(estimacion)
+        F_estimada = {}
+        for i in range(len(self.domain)):
+            F_estimada[i] = estimacion[i]
+        
+        # Tabla de tiempos de ejecución
+        tiempos = [['Cliente (Por usuario)', str("{:.4f}".format(t_cliente)) + ' ms'],['Servidor (Estimar frecuencias)',str(t_server) + ' ms']]
+        tabla_tiempos = tabulate(tiempos, headers=["Algoritmo", "Tiempo de Ejecución"], tablefmt="pretty")
+
+        return F_estimada, tabla_tiempos
 
     def crear_matriz_diseno(self):
         M = []
@@ -74,19 +98,33 @@ class Rappor:
 
 if __name__ == "__main__":
 
+    parser = argparse.ArgumentParser(description="Algoritmo Sequence Fragment Puzzle para la estimación de frecuencias a partir de un diccionario desconocido.")
     # Parametros dependientes del caso de uso
     m = 64
+    parser.add_argument("-m", type=int, required=True, help="m (Numero de bits de los filtros de bloom a emplear).")
     k = 6
+    parser.add_argument("-k", type=int, required=True, help="k (Número de funciones hash empleadas).")
     f = 0.5
+    parser.add_argument("-f", type=float, required=True, help="f (Probabilidad de perturbación permatente [0-1]).")
     p = 0.5
+    parser.add_argument("-p", type=float, required=True, help="p (Probabilidad de perturbación temporal para bits 0 [0-1]).")
+    parser.add_argument("-q", type=float, required=True, help="q (Probabilidad de perturbación temporal para bits 1 [0-1]).")
     q = 0.75
-
+    parser.add_argument("-N", type=int, required=True, help='Numero de elementos del dataset generado.')
+    parser.add_argument("-G", type=str, required=True, help='Tipo de generador [exp (exponencial), norm (normal), small (valores distribuidos en un dominio reducido)]')
+    parser.add_argument("--verbose_time", action="store_true", help="Se desea obtener los tiempos de ejecución de las funciones.")
+    args = parser.parse_args()
     # Generamos un flujo artificial de N datos 
-    N = 10**4
-    dataset,df, domain = utils.create_dataset(N,'exp')
+    
+    dataset,df, domain = utils.create_dataset(args.N,'exp')
 
-    R = Rappor(k,m,f,p,q,dataset,domain)
-    R.execute()
-    print(df)
+    R = Rappor(args.k,args.m,args.f,args.p,args.q,dataset,domain)
+    f_estimada, tiempos = R.execute()
+
+    if(args.verbose_time): print(tiempos + '\n')
+    utils.mostrar_resultados(df,f_estimada)
+
+
+    
 
 
