@@ -66,11 +66,13 @@ class Rappor:
         t_server = (fin - inicio) * 1000
 
         F_estimada = {}
-        for i in range(len(self.domain)):
-            F_estimada[i] = estimacion[i]
+        j = 0
+        for i in self.domain:
+            F_estimada[i] = estimacion[j]
+            j += 1
         
         # Tabla de tiempos de ejecución
-        tiempos = [['Cliente (Por usuario)', str("{:.4f}".format(t_cliente)) + ' ms'],['Servidor (Estimar frecuencias)',str(t_server) + ' ms']]
+        tiempos = [['Cliente (Por usuario)', str("{:.4f}".format(t_cliente)) + ' ms'],['Servidor (Estimar frecuencias)',str("{:.4f}".format(t_server)) + ' ms']]
         tabla_tiempos = tabulate(tiempos, headers=["Algoritmo", "Tiempo de Ejecución"], tablefmt="pretty")
 
         return F_estimada, tabla_tiempos

@@ -3,6 +3,8 @@ import pandas as pd
 import random
 import matplotlib.pyplot as plt
 from tabulate import tabulate
+from scipy.stats import pearsonr
+import math
 
 def create_dataset(N:int, type:str)->tuple[list,pd.DataFrame,list]:
     """
@@ -81,16 +83,26 @@ def mostrar_resultados(frecuencia_real:pd.DataFrame, f_estimada_num: dict):
             porc_real = f_real_percent[elemento]
             frec_estimada = f_estimada_num[elemento]
             porc_estimada = (frec_estimada /N) * 100
-            tabla_datos.append([elemento, frec_real, f"{porc_real}%", f"{frec_estimada:.2f}", f"{porc_estimada:.2f}%"])
+            diff = (f_real_num[elemento] - f_estimada_num[elemento])
+            tabla_datos.append([elemento, frec_real, f"{porc_real}%", f"{frec_estimada:.2f}", f"{porc_estimada:.2f}%",f"{diff:.2f}"])
     
     print("RESULTADOS OBTENIDOS")
-    print(tabulate(tabla_datos, headers=["Elemento", "Frecuencia Real", "Porcentaje Real", "Frecuencia Estimada", "Porcentaje Estimado"], tablefmt="pretty"))
+    print(tabulate(tabla_datos, headers=["Elemento", "Frecuencia Real", "Porcentaje Real", "Frecuencia Estimada", "Porcentaje Estimado", "Diferencia en la estimacion"], tablefmt="pretty"))
 
-    # Cálculo del error
-    errores = {key: abs(f_real_num[key] - f_estimada_num[key]) for key in f_estimada_num}
-    sum = np.mean(list(errores.values()))
+    # Cálculo de errores
+    errores = {key: math.pow((f_real_num[key] - f_estimada_num[key]),2) for key in f_estimada_num}
+    MSE = np.mean(list(errores.values()))/(np.mean(list(f_real_num.values()))**2)
+    RMSE = math.sqrt(MSE)
+    errores = [abs((f_real_num[key] - f_estimada_num[key])/f_real_num[key]) for key in f_estimada_num]
+    print()
+    MAE = np.mean(errores)
+    MAPE = np.mean(errores)*100
+    coef_pearson, _ = pearsonr(list(f_real_num.values()),list(f_estimada_num.values()))
 
-    print(f"El error obtenido es de un {((sum/N)*100):.2f}%")
+    errores = [['MSE normalizado', str("{:.4f}".format(MSE))],['RMSE normalizado', str("{:.4f}".format(RMSE))],['MAE', str("{:.4f}".format(MAE))],['MAPE', str("{:.4f}".format(MAPE))], ['Coeficiente correlacion Pearson', str("{:.4f}".format(coef_pearson))]]
+    tabla_errores = tabulate(errores, tablefmt="pretty")
+
+    print(tabla_errores)
 
     
     # Representación visual
