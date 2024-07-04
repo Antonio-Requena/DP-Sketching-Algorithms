@@ -88,7 +88,7 @@ class Rappor:
         N = len(Informes)
         Informes = np.mat(Informes)
         contadores = np.array(np.sum(Informes,0))[0]
-        contadores_estimados = [(c - (0.5*f*q + p-0.5*f*q)*N)/((1-f)*(q-p)) for c in contadores]
+        contadores_estimados = [(c - (0.5*self.f*self.q + self.p-0.5*self.f*self.q)*N)/((1-self.f)*(self.q-self.p)) for c in contadores]
         return contadores_estimados
     
     def regresion_lasso(self, X,Y):
@@ -100,29 +100,25 @@ class Rappor:
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description="Algoritmo Sequence Fragment Puzzle para la estimación de frecuencias a partir de un diccionario desconocido.")
+    parser = argparse.ArgumentParser(description="Algoritmo RAPPOR para la estimación de frecuencias a partir de un conjunto de candidatos.")
     # Parametros dependientes del caso de uso
-    m = 64
     parser.add_argument("-m", type=int, required=True, help="m (Numero de bits de los filtros de bloom a emplear).")
-    k = 6
     parser.add_argument("-k", type=int, required=True, help="k (Número de funciones hash empleadas).")
-    f = 0.5
     parser.add_argument("-f", type=float, required=True, help="f (Probabilidad de perturbación permatente [0-1]).")
-    p = 0.5
     parser.add_argument("-p", type=float, required=True, help="p (Probabilidad de perturbación temporal para bits 0 [0-1]).")
     parser.add_argument("-q", type=float, required=True, help="q (Probabilidad de perturbación temporal para bits 1 [0-1]).")
-    q = 0.75
     parser.add_argument("-N", type=int, required=True, help='Numero de elementos del dataset generado.')
     parser.add_argument("-G", type=str, required=True, help='Tipo de generador [exp (exponencial), norm (normal), small (valores distribuidos en un dominio reducido)]')
     parser.add_argument("--verbose_time", action="store_true", help="Se desea obtener los tiempos de ejecución de las funciones.")
     args = parser.parse_args()
     # Generamos un flujo artificial de N datos 
     
-    dataset,df, domain = utils.create_dataset(args.N,'exp')
+    dataset,df, domain = utils.create_dataset(args.N,args.G)
 
     R = Rappor(args.k,args.m,args.f,args.p,args.q,dataset,domain)
     f_estimada, tiempos = R.execute()
 
+    os.system('cls' if os.name == 'nt' else 'clear')
     if(args.verbose_time): print(tiempos + '\n')
     utils.mostrar_resultados(df,f_estimada)
 

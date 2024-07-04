@@ -1,6 +1,20 @@
 import random
 import math
 import numpy as np
+import os
+import importlib.util
+import argparse
+import time
+from progress.bar import Bar
+from tabulate import tabulate
+
+# Enlace con la ruta para las utilidades (funciones de uso comun)
+file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..',  'utils', 'utils.py'))
+module_name = 'utils'
+
+spec = importlib.util.spec_from_file_location(module_name, file_path)
+utils = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(utils)
 
 class dBitFlip:
     def __init__(self, dataset, epsilon, domain, d):
@@ -43,36 +57,56 @@ class dBitFlip:
         
         # Calcular la estimación de la frecuencia para cada elemento del dominio
         for key in self.domain:
-            frecuencia_estimacion[key] = (k / ( n * self.d)) * suma_frecuencias[key]
+            frecuencia_estimacion[key] = ((k / ( n * self.d)) * suma_frecuencias[key])*n # Corregimos el paso a frecuencias
         
         return frecuencia_estimacion
     
     def execute(self):
+        bar = Bar('Procesando datos de los clientes', max=len(self.dataset), suffix='%(percent)d%%')
         vectores_priv = []
+        t_cliente = 0
         for x in self.dataset:
+            inicio = time.time()
             vectores_priv.append(self.cliente(x))
+            fin = time.time()
+            t_cliente += (fin - inicio) * 1000
+            bar.next()
+        bar.finish()
+        t_cliente = t_cliente/len(self.dataset)
         
+        t_server = 0
+        print('\n' + 'Ejecutando algortimo del servidor' + '\n')
+        inicio = time.time()
         F_estimada = self.estimar_frecuencias(vectores_priv)
-        return F_estimada
+        fin = time.time()
+        t_server = (fin - inicio) * 1000
+
+        # Tabla de tiempos de ejecución
+        tiempos = [['Cliente (Por usuario)', str("{:.4f}".format(t_cliente)) + ' ms'],['Servidor (Estimar frecuencias)',str("{:.4f}".format(t_server)) + ' ms']]
+        tabla_tiempos = tabulate(tiempos, headers=["Algoritmo", "Tiempo de Ejecución"], tablefmt="pretty")
+
+
+        return F_estimada, tabla_tiempos
 
 
 if __name__ == '__main__':
     # PARÁMETROS
-    N = 300000
-    epsilon = 2
-    d = 2
 
-
-    dataset,df, domain = gen.create_dataset(N,'small')
+    parser = argparse.ArgumentParser(description="Algoritmo dbitFlip para la estimación de frecuencias a partir de un dominio conocido.")
+    parser.add_argument("-d", type=int, required=True, help="Numero de elementos del dominio enviados por los clientes.")
+    parser.add_argument("-e", type=float, required=True, help="Valor de epsilon.")
+    parser.add_argument("-N", type=int, required=True, help='Numero de elementos del dataset generado.')
+    parser.add_argument("-G", type=str, required=True, help='Tipo de generador [exp (exponencial), norm (normal), small (valores distribuidos en un dominio reducido)]')
+    parser.add_argument("--verbose_time", action="store_true", help="Se desea obtener los tiempos de ejecución de las funciones.")
+    args = parser.parse_args()
+    dataset,df, domain = utils.create_dataset(args.N,args.G)
    
-    frecuencias = df['value'].value_counts()
-    frecuencias = (frecuencias/N).sort_index()
-    frecuencias = frecuencias.to_dict()
-    print(frecuencias)
 
-    Bit = dBitFlip(dataset,epsilon,domain,d)
-    F_estimada = Bit.execute()
-
-    print(F_estimada)
+    Bit = dBitFlip(dataset,args.e,domain,args.d)
+    f_estimada, tiempos = Bit.execute()
+    
+    os.system('cls' if os.name == 'nt' else 'clear')
+    if(args.verbose_time): print(tiempos + '\n')
+    utils.mostrar_resultados(df,f_estimada)
 
  

@@ -4,6 +4,7 @@ import random
 from sympy import primerange
 import importlib.util
 import os
+import importlib.util
 
 # Enlace con la ruta para las utilidades (funciones de uso comun)
 file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..',  'utils', 'utils.py'))
