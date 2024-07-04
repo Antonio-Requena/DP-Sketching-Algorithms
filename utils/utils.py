@@ -94,7 +94,7 @@ def mostrar_resultados(frecuencia_real:pd.DataFrame, f_estimada_num: dict):
     MSE = np.mean(list(errores.values()))/(np.mean(list(f_real_num.values()))**2)
     RMSE = math.sqrt(MSE)
     errores = [abs((f_real_num[key] - f_estimada_num[key])/f_real_num[key]) for key in f_estimada_num]
-    print()
+
     MAE = np.mean(errores)
     MAPE = np.mean(errores)*100
     coef_pearson, _ = pearsonr(list(f_real_num.values()),list(f_estimada_num.values()))
