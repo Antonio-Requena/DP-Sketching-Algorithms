@@ -47,15 +47,12 @@ class dBitFlip:
         k = len(self.domain)
         frecuencia_estimacion = {}
         
-        # Inicializar la suma de las frecuencias ajustadas
         suma_frecuencias = {key: 0 for key in self.domain}
         
-        # Calcular la suma de las frecuencias ajustadas
         for b in vectores_priv:
             for key, b_iv in b.items():
                 suma_frecuencias[key] += (b_iv * (math.exp(self.epsilon / 2) + 1) - 1) / (math.exp(self.epsilon / 2) - 1)
         
-        # Calcular la estimación de la frecuencia para cada elemento del dominio
         for key in self.domain:
             frecuencia_estimacion[key] = ((k / ( n * self.d)) * suma_frecuencias[key])*n # Corregimos el paso a frecuencias
         
@@ -90,8 +87,6 @@ class dBitFlip:
 
 
 if __name__ == '__main__':
-    # PARÁMETROS
-
     parser = argparse.ArgumentParser(description="Algoritmo dbitFlip para la estimación de frecuencias a partir de un dominio conocido.")
     parser.add_argument("-d", type=int, required=True, help="Numero de elementos del dominio enviados por los clientes.")
     parser.add_argument("-e", type=float, required=True, help="Valor de epsilon.")

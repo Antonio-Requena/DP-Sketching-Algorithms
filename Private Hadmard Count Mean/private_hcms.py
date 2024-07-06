@@ -3,7 +3,10 @@ import random
 import numpy as np
 import importlib.util
 import os
-
+import argparse
+import time
+from progress.bar import Bar
+from tabulate import tabulate
 
 # Enlace con la ruta para las utilidades (funciones de uso comun)
 file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..',  'utils', 'utils.py'))
@@ -74,32 +77,64 @@ class privateHCMS:
         return (self.m/(self.m-1))*(1/self.k * np.sum([self.M[i,self.hashes[i](d)] for i in range(self.k)]) - self.N/self.m)
     
     def execute(self):
+        bar = Bar('Procesando datos de los clientes', max=len(self.dataset), suffix='%(percent)d%%')
+        t_cliente = 0
+        t_act = 0
         for d in self.dataset:
+            inicio = time.time()
             w_i, j_i, l_i = self.cliente(d)
+            fin = time.time()
+            t_cliente += (fin - inicio) * 1000
+
+            inicio = time.time()
             self.actualizar_matriz_sketch(w_i,j_i,l_i)
+            fin = time.time()
+            t_act += (fin - inicio) * 1000
+            bar.next()
+        bar.finish()
+        t_cliente = t_cliente/len(self.dataset)
+        t_act = t_act/len(self.dataset)
 
         F_estimada = {}
         self.trasponer_M()
+        t_esti = 0
+        bar = Bar('Obteniendo histograma de frecuencias estimadas', max=len(self.domain), suffix='%(percent)d%%')
         for x in self.domain:
+            inicio = time.time()
             F_estimada[x] = self.estimar_d(x)
+            fin = time.time()
+            t_esti += (fin - inicio) * 1000
+            bar.next()
+        bar.finish()
+        t_esti = t_esti/len(self.domain)
+
+        # Tabla de tiempos de ejecución
+        tiempos = [['Cliente (Por usuario)', str("{:.4f}".format(t_cliente)) + ' ms'],['Servidor (Actualizar matriz)',str("{:.4f}".format(t_act)) + ' ms'],['Servidor (Estimación individual)',str("{:.4f}".format(t_esti)) + ' ms']]
+        tabla_tiempos = tabulate(tiempos, headers=["Algoritmo", "Tiempo de Ejecución"], tablefmt="pretty")
+
         
-        return F_estimada
+        return F_estimada, tabla_tiempos
 
 
 
 if __name__ == "__main__":
-    # Parametros dependientes del caso de uso
-    k = 65536
-    epsilon = 4
-    m = 16
+    parser = argparse.ArgumentParser(description="Algoritmo Private HADMARD Count Mean Sketch para la estimación de frecuencias a partir de un dominio conocido reduciendo el ancho de banda.")
+    parser.add_argument("-k", type=int, required=True, help="Numero de funciones hash empleadas (Nº Filas en la matriz de sketch).")
+    parser.add_argument("-m", type=int, required=True, help="Valor máximo del dominio de las funciones hash (Nº de columnas de la matriz de sketch)")
+    parser.add_argument("-e", type=float, required=True, help="Valor de epsilon.")
+    parser.add_argument("-N", type=int, required=True, help='Numero de elementos del dataset generado.')
+    parser.add_argument("-G", type=str, required=True, help='Tipo de generador [exp (exponencial), norm (normal), small (valores distribuidos en un dominio reducido)]')
+    parser.add_argument("--verbose_time", action="store_true", help="Se desea obtener los tiempos de ejecución de las funciones.")
+    args = parser.parse_args()
+    dataset,df, domain = utils.create_dataset(args.N,args.G)
 
-    # Generamos un flujo artificial de N datos 
-    N = 10**4
-    dataset,df, domain = utils.create_dataset(N,'small')
 
 
-    HCMS = privateHCMS(epsilon,k,m,dataset,domain)
-    f_estimada = HCMS.execute()
+    HCMS = privateHCMS(args.e,args.k,args.m,dataset,domain)
+    f_estimada, tiempos = HCMS.execute()
+
+    os.system('cls' if os.name == 'nt' else 'clear')
+    if(args.verbose_time): print(tiempos + '\n')
     utils.mostrar_resultados(df,f_estimada)
 
 

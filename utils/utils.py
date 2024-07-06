@@ -84,7 +84,7 @@ def mostrar_resultados(frecuencia_real:pd.DataFrame, f_estimada_num: dict):
             frec_estimada = f_estimada_num[elemento]
             porc_estimada = (frec_estimada /N) * 100
             diff = abs(f_real_num[elemento] - f_estimada_num[elemento])
-            tabla_datos.append([elemento, frec_real, f"{porc_real:.2f}%", f"{frec_estimada:.2f}", f"{porc_estimada:.2f}%",f"{diff:.2f}"])
+            tabla_datos.append([elemento, frec_real, f"{porc_real:.3f}%", f"{frec_estimada:.2f}", f"{porc_estimada:.3f}%",f"{diff:.2f}"])
     
     print("RESULTADOS OBTENIDOS")
     print(tabulate(tabla_datos, headers=["Elemento", "Frecuencia Real", "Porcentaje Real", "Frecuencia Estimada", "Porcentaje Estimado", "Diferencia en la estimacion"], tablefmt="pretty"))
