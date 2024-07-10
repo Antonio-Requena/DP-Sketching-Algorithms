@@ -91,11 +91,12 @@ def mostrar_resultados(frecuencia_real:pd.DataFrame, f_estimada_num: dict):
 
     # Cálculo de errores
     errores = [abs((f_real_num[key] - f_estimada_num[key])) for key in f_estimada_num]
+    errores_mean = np.mean(errores)
     errores = np.sum(errores)
 
     coef_pearson, _ = pearsonr(list(f_real_num.values()),list(f_estimada_num.values()))
 
-    errores = [['Numero de errores', str("{:.2f}".format(errores))],['Porcentaje de error', str("{:.2f}".format((errores/N)*100) + '%')], ['Coeficiente correlacion Pearson', str("{:.4f}".format(coef_pearson))]]
+    errores = [['Numero de errores', str("{:.2f}".format(errores))],['Errores (media)', str("{:.2f}".format(errores_mean))],['Porcentaje de error', str("{:.2f}".format((errores/N)*100) + '%')], ['Coeficiente correlacion Pearson', str("{:.4f}".format(coef_pearson))]]
     tabla_errores = tabulate(errores, tablefmt="pretty")
 
     print('\n'+tabla_errores)
@@ -115,4 +116,4 @@ def mostrar_resultados(frecuencia_real:pd.DataFrame, f_estimada_num: dict):
     plt.ylabel('Número de Ocurrencias')
     plt.xticks(rotation=0)
     plt.legend(loc='best')
-    plt.show()
+    #plt.show()
