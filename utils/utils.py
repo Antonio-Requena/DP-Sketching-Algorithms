@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 import random
+import os
+import string
 import matplotlib.pyplot as plt
 from tabulate import tabulate
 from scipy.stats import pearsonr
@@ -44,6 +46,33 @@ def create_dataset(N:int, type:str)->tuple[list,pd.DataFrame,list]:
     unique_values.sort()
     return valores,df, unique_values
 
+def load_dataset(csv_filename):
+    """
+    Carga un dataset desde un archivo CSV y devuelve los valores, el DataFrame y los valores únicos de 'value'.
+
+    Args:
+    - csv_filename (str): Nombre del archivo CSV que se encuentra en la carpeta 'datasets'.
+
+    Returns:
+    - valores (list): Dataset generado en formato lista.
+    - df (DataFrame): Dataset generado en formato DataFrame (biblioteca Pandas).
+    - unique_values (list): Valores únicos (dominio) del dataset.
+    """
+    # Construir la ruta completa al archivo CSV
+    dataset_path =  os.path.abspath(os.path.join(os.path.dirname(__file__), '..',  'utils/datasets', csv_filename + '.csv'))
+
+    # Cargar el dataset desde el archivo CSV
+    df = pd.read_csv(dataset_path)
+    df = df[['value']]
+    
+    # Obtener los valores como lista
+    valores = df['value'].tolist()
+    
+    # Obtener los valores únicos
+    unique_values = df['value'].unique().tolist()
+    
+    # Devolver los resultados
+    return valores, df, unique_values
 
 def generate_hash_functions(k, p, c,m):
     """
@@ -116,4 +145,7 @@ def mostrar_resultados(frecuencia_real:pd.DataFrame, f_estimada_num: dict):
     plt.ylabel('Número de Ocurrencias')
     plt.xticks(rotation=0)
     plt.legend(loc='best')
-    #plt.show()
+
+    show_graph = False #(Desactivar para test)
+    if show_graph == True:
+        plt.show() 

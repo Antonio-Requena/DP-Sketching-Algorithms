@@ -170,15 +170,11 @@ def generar_csv(N):
             writer.writerow([d])
 
 def cargar_csv(nombre_archivo):
+    dataset_0, _, _ = utils.load_dataset(nombre_archivo)
+
     dataset = []
-    
-    with open(nombre_archivo, mode='r', newline='') as archivo_csv:
-        reader = csv.reader(archivo_csv)
-        next(reader)  # Saltar el encabezado
-        
-        for row in reader:
-            valor =  row[0][:10].ljust(10) # Normalizamos las cadenas
-            dataset.append(valor)
+    for elemento in dataset_0:
+        dataset.append(elemento[:10].ljust(10))
     
     return dataset, dict(Counter(dataset))
 
@@ -194,14 +190,13 @@ if __name__ == "__main__":
     parser.add_argument("-m", type=int, required=True, help="m (Número de columnas de la matriz de sketch para la secuencia).")
     parser.add_argument("-m2", type=int, required=True, help="m prima (Número de columnas de la matriz de sketch para las piezas).")
     parser.add_argument("-T", type=int, required=True, help='Umbral que acota superiormente la cantidad de cadenas estimadas a generar.')
-    parser.add_argument("-N", type=int, required=True, help='Numero de elementos del dataset generado.')
+    parser.add_argument("-d", type=str, required=True, help='Nombre del dataset empleado')
     parser.add_argument("--verbose_time", action="store_true", help="Se desea obtener los tiempos de ejecución de las funciones.")
     
     args = parser.parse_args()
 
-    # Generamos un flujo artificial de N datos y lo almacenamos en un CSV
-    generar_csv(args.N)
-    dataset,frecuencias = cargar_csv('andalusian_words.csv')
+    # Cargamos el dataset
+    dataset,frecuencias = cargar_csv(args.d)
     
     print('Configurando parámetros iniciales... ')
  
