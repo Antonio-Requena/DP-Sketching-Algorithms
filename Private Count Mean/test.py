@@ -1,6 +1,8 @@
 import subprocess
 from progress.bar import Bar
 
+
+
 # Define los valores de los parámetros a variar
 e_values = [0.5,2,4,8]  # Añade más valores si es necesario
 k_values = [128,32768,65536]  # Añade más valores si es necesario

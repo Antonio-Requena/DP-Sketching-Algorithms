@@ -1,5 +1,7 @@
 import subprocess
 from progress.bar import Bar
+import csv
+import re
 
 # Define los valores de los parámetros a variar
 e_values = [0.5,2,4,8]  # Añade más valores si es necesario
@@ -27,7 +29,7 @@ with open(output_file, 'w') as f:
                     f.write('Salida:\n')
                     f.write(stdout)
                     f.write('\n')
-                        
+                    
                     # Escribe cualquier error en el archivo (opcional)
                     if stderr:
                         f.write('Errores:\n')
