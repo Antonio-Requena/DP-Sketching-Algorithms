@@ -90,11 +90,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Algoritmo dbitFlip para la estimación de frecuencias a partir de un dominio conocido.")
     parser.add_argument("-d", type=int, required=True, help="Numero de elementos del dominio enviados por los clientes.")
     parser.add_argument("-e", type=float, required=True, help="Valor de epsilon.")
-    parser.add_argument("-N", type=int, required=True, help='Numero de elementos del dataset generado.')
-    parser.add_argument("-G", type=str, required=True, help='Tipo de generador [exp (exponencial), norm (normal), small (valores distribuidos en un dominio reducido)]')
+    parser.add_argument("-D", type=str, required=True, help='Nombre del dataset empleado')
     parser.add_argument("--verbose_time", action="store_true", help="Se desea obtener los tiempos de ejecución de las funciones.")
     args = parser.parse_args()
-    dataset,df, domain = utils.create_dataset(args.N,args.G)
+    dataset,df, domain = utils.load_dataset(args.D)
    
 
     Bit = dBitFlip(dataset,args.e,domain,args.d)

@@ -122,10 +122,14 @@ def mostrar_resultados(frecuencia_real:pd.DataFrame, f_estimada_num: dict):
     errores = [abs((f_real_num[key] - f_estimada_num[key])) for key in f_estimada_num]
     errores_mean = np.mean(errores)
     errores = np.sum(errores)
+    max_f = max(f_real_num.values())
+    min_f = min(f_real_num.values())
 
+    mse = np.sum([(f_real_num[key] - f_estimada_num[key])**2 for key in f_estimada_num])/len(f_estimada_num)
+    mse_norm = mse/(max_f-min_f)#np.sum([(f_real_num[key]/N - f_estimada_num[key]/N)**2 for key in f_estimada_num])/len(f_estimada_num)
     coef_pearson, _ = pearsonr(list(f_real_num.values()),list(f_estimada_num.values()))
 
-    errores = [['Numero de errores', str("{:.2f}".format(errores))],['Errores (media)', str("{:.2f}".format(errores_mean))],['Porcentaje de error', str("{:.2f}".format((errores/N)*100) + '%')], ['Coeficiente correlacion Pearson', str("{:.4f}".format(coef_pearson))]]
+    errores = [['Numero de errores', str("{:.2f}".format(errores))],['Numero de errores (media)', str("{:.2f}".format(errores_mean))],['Error porcentual', str("{:.2f}".format((errores_mean/N)*100) + '%')],['MSE', str("{:.2f}".format((mse)))], ['RMSE', str("{:.2f}".format((np.sqrt(mse))))],['MSE (Normalizado)', str("{:.2f}".format((mse_norm)))], ['RMSE (Normalizado)', str("{:.2f}".format((np.sqrt(mse_norm))))], ['Coeficiente correlacion Pearson', str("{:.4f}".format(coef_pearson))]]
     tabla_errores = tabulate(errores, tablefmt="pretty")
 
     print('\n'+tabla_errores)

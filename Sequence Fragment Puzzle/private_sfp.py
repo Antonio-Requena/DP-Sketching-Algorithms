@@ -155,20 +155,6 @@ class privateSPF:
         return tabla_tiempos
                 
 
-def generar_csv(N):
-    palabras = [ "chiquillo","guasa","jartarse","jabato","despeinao","tasca","mantecaito","enquinao","zurrapa","achuchar","quillo","picha","nonina", "antoje"]
-    probabilidades = np.random.exponential(scale=1.0, size=len(palabras))
-    probabilidades = probabilidades / probabilidades.sum()
-    dic = np.random.choice(palabras, size=N, p=probabilidades)
-
-    with open('andalusian_words.csv', mode='w', newline='') as archivo_csv:
-        writer = csv.writer(archivo_csv)
-        writer.writerow(['value'])  # Escribir encabezado de la columna
-        
-        # Escribir N filas de datos
-        for d in dic:
-            writer.writerow([d])
-
 def cargar_csv(nombre_archivo):
     dataset_0, _, _ = utils.load_dataset(nombre_archivo)
 

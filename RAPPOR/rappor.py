@@ -107,13 +107,12 @@ if __name__ == "__main__":
     parser.add_argument("-f", type=float, required=True, help="f (Probabilidad de perturbación permatente [0-1]).")
     parser.add_argument("-p", type=float, required=True, help="p (Probabilidad de perturbación temporal para bits 0 [0-1]).")
     parser.add_argument("-q", type=float, required=True, help="q (Probabilidad de perturbación temporal para bits 1 [0-1]).")
-    parser.add_argument("-N", type=int, required=True, help='Numero de elementos del dataset generado.')
-    parser.add_argument("-G", type=str, required=True, help='Tipo de generador [exp (exponencial), norm (normal), small (valores distribuidos en un dominio reducido)]')
+    parser.add_argument("-d", type=str, required=True, help='Nombre del dataset empleado')
     parser.add_argument("--verbose_time", action="store_true", help="Se desea obtener los tiempos de ejecución de las funciones.")
     args = parser.parse_args()
-    # Generamos un flujo artificial de N datos 
     
-    dataset,df, domain = utils.create_dataset(args.N,args.G)
+    
+    dataset,df, domain = utils.load_dataset(args.d)
 
     R = Rappor(args.k,args.m,args.f,args.p,args.q,dataset,domain)
     f_estimada, tiempos = R.execute()
