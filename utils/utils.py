@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 from tabulate import tabulate
 from scipy.stats import pearsonr
 
+TEST_MODE = True#(ACTIVAR para test)
+
 
 def create_dataset(N:int, type:str)->tuple[list,pd.DataFrame,list]:
     """
@@ -115,8 +117,6 @@ def mostrar_resultados(frecuencia_real:pd.DataFrame, f_estimada_num: dict):
             diff = abs(f_real_num[elemento] - f_estimada_num[elemento])
             tabla_datos.append([elemento, frec_real, f"{porc_real:.3f}%", f"{frec_estimada:.2f}", f"{porc_estimada:.3f}%",f"{diff:.2f}"])
     
-    print("RESULTADOS OBTENIDOS")
-    print(tabulate(tabla_datos, headers=["Elemento", "Frecuencia Real", "Porcentaje Real", "Frecuencia Estimada", "Porcentaje Estimado", "Diferencia en la estimacion"], tablefmt="pretty"))
 
     # Cálculo de errores
     errores = [abs((f_real_num[key] - f_estimada_num[key])) for key in f_estimada_num]
@@ -130,26 +130,29 @@ def mostrar_resultados(frecuencia_real:pd.DataFrame, f_estimada_num: dict):
     coef_pearson, _ = pearsonr(list(f_real_num.values()),list(f_estimada_num.values()))
 
     errores = [['Numero de errores', str("{:.2f}".format(errores))],['Numero de errores (media)', str("{:.2f}".format(errores_mean))],['Error porcentual', str("{:.2f}".format((errores_mean/N)*100) + '%')],['MSE', str("{:.2f}".format((mse)))], ['RMSE', str("{:.2f}".format((np.sqrt(mse))))],['MSE (Normalizado)', str("{:.2f}".format((mse_norm)))], ['RMSE (Normalizado)', str("{:.2f}".format((np.sqrt(mse_norm))))], ['Coeficiente correlacion Pearson', str("{:.4f}".format(coef_pearson))]]
-    tabla_errores = tabulate(errores, tablefmt="pretty")
 
-    print('\n'+tabla_errores)
+    if TEST_MODE:
+        for error in errores:
+            print(f"{error[0]}: {error[1]}")
+    else:
+        print("RESULTADOS OBTENIDOS")
+        print(tabulate(tabla_datos, headers=["Elemento", "Frecuencia Real", "Porcentaje Real", "Frecuencia Estimada", "Porcentaje Estimado", "Diferencia en la estimacion"], tablefmt="pretty"))
+        
+        tabla_errores = tabulate(errores, tablefmt="pretty")
+        print('\n'+tabla_errores)
 
-    
-    # Representación visual
-    data = {
-        'Frecuencia Real': f_real_num,
-        'Frecuencia Estimada': f_estimada_num
-    }
-    df = pd.DataFrame(data)
-    
-    # Crear la gráfica
-    df.plot(kind='bar', figsize=(10, 6))
-    plt.title('Comparación de Frecuencias Reales y Estimadas')
-    plt.xlabel('Elementos')
-    plt.ylabel('Número de Ocurrencias')
-    plt.xticks(rotation=0)
-    plt.legend(loc='best')
-
-    show_graph = False #(Desactivar para test)
-    if show_graph == True:
+        # Representación visual
+        data = {
+            'Frecuencia Real': f_real_num,
+            'Frecuencia Estimada': f_estimada_num
+        }
+        df = pd.DataFrame(data)
+        
+        # Crear la gráfica
+        df.plot(kind='bar', figsize=(10, 6))
+        plt.title('Comparación de Frecuencias Reales y Estimadas')
+        plt.xlabel('Elementos')
+        plt.ylabel('Número de Ocurrencias')
+        plt.xticks(rotation=0)
+        plt.legend(loc='best')
         plt.show() 

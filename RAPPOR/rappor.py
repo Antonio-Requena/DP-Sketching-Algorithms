@@ -17,6 +17,7 @@ spec = importlib.util.spec_from_file_location(module_name, file_path)
 utils = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(utils)
 
+TEST_MODE = True
 class Rappor:
     def __init__(self,k,m,f,p,q,dataset,domain):
         self.k = m # Número de bits por Bloom Filter (Concordancia en la notación con el pseudocódigo)
@@ -117,8 +118,13 @@ if __name__ == "__main__":
     R = Rappor(args.k,args.m,args.f,args.p,args.q,dataset,domain)
     f_estimada, tiempos = R.execute()
 
-    os.system('cls' if os.name == 'nt' else 'clear')
-    if(args.verbose_time): print(tiempos + '\n')
+    os.system('cls' if os.name == 'nt' else 'clear>/dev/null')
+    if args.verbose_time: 
+        if TEST_MODE: 
+            for t in tiempos:
+                print(f"{t[0]}: {t[1]}")
+        else:
+            print(tiempos + '\n')
     utils.mostrar_resultados(df,f_estimada)
 
 

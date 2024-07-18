@@ -28,6 +28,8 @@ spec = importlib.util.spec_from_file_location(module_name, file_path)
 pcms = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(pcms)
 
+TEST_MODE = True
+
 class privateSPF:
     def __init__(self,epsilon,epsilon_prima,k,k_prima,m,m_prima,dataset,T):
         # Inicialización de parámetros
@@ -189,8 +191,12 @@ if __name__ == "__main__":
     SPF = privateSPF(args.e,args.e2,args.k,args.k2,args.m,args.m2,dataset,args.T)
     tiempos = SPF.execute()
 
-    if(args.verbose_time): print(tiempos)
-    
+    if args.verbose_time: 
+        if TEST_MODE: 
+            for t in tiempos:
+                print(f"{t[0]}: {t[1]}")
+        else:
+            print(tiempos + '\n')
 
     
 

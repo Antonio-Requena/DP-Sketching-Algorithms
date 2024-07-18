@@ -16,7 +16,7 @@ spec = importlib.util.spec_from_file_location(module_name, file_path)
 utils = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(utils)
 
-
+TEST_MODE = True
 
 class privateHCMS:
     def __init__(self,epsilon,k,m, dataset, domain):
@@ -132,8 +132,13 @@ if __name__ == "__main__":
     HCMS = privateHCMS(args.e,args.k,args.m,dataset,domain)
     f_estimada, tiempos = HCMS.execute()
 
-    os.system('cls' if os.name == 'nt' else 'clear')
-    if(args.verbose_time): print(tiempos + '\n')
+    os.system('cls' if os.name == 'nt' else 'clear>/dev/null')
+    if args.verbose_time: 
+        if TEST_MODE: 
+            for t in tiempos:
+                print(f"{t[0]}: {t[1]}")
+        else:
+            print(tiempos + '\n')
     utils.mostrar_resultados(df,f_estimada)
 
 
