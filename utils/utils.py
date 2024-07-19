@@ -132,6 +132,7 @@ def mostrar_resultados(frecuencia_real:pd.DataFrame, f_estimada_num: dict):
     errores = [['Numero de errores', str("{:.2f}".format(errores))],['Numero de errores (media)', str("{:.2f}".format(errores_mean))],['Error porcentual', str("{:.2f}".format((errores_mean/N)*100) + '%')],['MSE', str("{:.2f}".format((mse)))], ['RMSE', str("{:.2f}".format((np.sqrt(mse))))],['MSE (Normalizado)', str("{:.2f}".format((mse_norm)))], ['RMSE (Normalizado)', str("{:.2f}".format((np.sqrt(mse_norm))))], ['Coeficiente correlacion Pearson', str("{:.4f}".format(coef_pearson))]]
 
     if TEST_MODE:
+        errores = [['Media de errores', str("{:.2f}".format(errores_mean))],['Error porcentual', str("{:.2f}".format((errores_mean/N)*100) + '%')],['MSE', str("{:.2f}".format((mse)))], ['RMSE', str("{:.2f}".format((np.sqrt(mse))))],['MSE (Normalizado)', str("{:.2f}".format((mse_norm)))], ['RMSE (Normalizado)', str("{:.2f}".format((np.sqrt(mse_norm))))], ['Coeficiente correlacion Pearson', str("{:.4f}".format(coef_pearson))]]
         for error in errores:
             print(f"{error[0]}: {error[1]}")
     else:
