@@ -12,6 +12,8 @@ import argparse
 import time
 from tabulate import tabulate
 
+TEST_MODE = True
+
 # Enlace con la ruta para las utilidades (funciones de uso comun)
 file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..',  'utils', 'utils.py'))
 module_name = 'utils'
@@ -76,7 +78,7 @@ class privateSPF:
         Q_w = [[]]*256
         alfabeto = string.ascii_lowercase + ' ' # abcdefghijklmnopqrstuvwxyz + espacio
         combinaciones = [a + b for a in alfabeto for b in alfabeto]
-        bar = Bar('Generando el diccionario', max=len(self.posiciones)*256, suffix='%(percent)d%%')
+        #bar = Bar('Generando el diccionario', max=len(self.posiciones)*256, suffix='%(percent)d%%')
 
         for l in self.posiciones:
             pos = self.posiciones.index(l)
@@ -85,7 +87,7 @@ class privateSPF:
             dict = {}
             # Iterar sobre los valores w de 0 a 255
             for w in range(256):
-                bar.next()
+                #bar.next()
                 for c in combinaciones:
                     clave = str(w) + c
                     dict[clave] = self.CMS_2[pos].estimar_d(clave)
@@ -93,7 +95,7 @@ class privateSPF:
             # Seleccionamos las T más frecuentes
             Q_l[pos] = sorted(dict, key=dict.get, reverse=True)[:T]
 
-        bar.finish()
+        #bar.finish()
 
         for w in range(256):
             q_l =  [[] for _ in range(len(self.posiciones))]
@@ -119,7 +121,7 @@ class privateSPF:
         return X
 
     def execute(self):
-        bar = Bar('Procesando datos de los clientes', max=len(self.dataset), suffix='%(percent)d%%')
+        #bar = Bar('Procesando datos de los clientes', max=len(self.dataset), suffix='%(percent)d%%')
         t_cliente = 0
         t_server = 0
 
@@ -133,8 +135,8 @@ class privateSPF:
             self.servidor(alpha, beta, l)
             fin = time.time()
             t_server += (fin - inicio) * 1000
-            bar.next()
-        bar.finish()
+            #bar.next()
+        #bar.finish()
         t_cliente = t_cliente/len(self.dataset)
         t_server = t_server/len(self.dataset)
         
@@ -145,16 +147,17 @@ class privateSPF:
 
         # Tabla de tiempos de ejecución
         tiempos = [['Cliente', str("{:.4f}".format(t_cliente)) + ' ms'],['Servidor (Actualizar Matriz)',str(t_server) + ' ms'],['Servidor (Generar diccionario)',str(t_dict) + ' s']]
-        tabla_tiempos = tabulate(tiempos, headers=["Algoritmo", "Tiempo de Ejecución"], tablefmt="pretty")
-
+        
+        f_e = X
         X = {k: v for k, v in sorted(X.items(), key=lambda item: item[1], reverse=True) if v >= 0}
         X = [[clave, "{:.4f}".format(valor)] for clave, valor in X.items()]
 
-        print('\n RESULTADOS OBTENIDOS \n')
-        tabla_cadenas = tabulate(X, headers=["Cadena", "Frecuencia estimada"], tablefmt="pretty")
-        print(tabla_cadenas + '\n')
+        if not TEST_MODE:
+            print('\n RESULTADOS OBTENIDOS \n')
+            tabla_cadenas = tabulate(X, headers=["Cadena", "Frecuencia estimada"], tablefmt="pretty")
+            print(tabla_cadenas + '\n')
 
-        return tabla_tiempos
+        return tiempos, f_e
                 
 
 def cargar_csv(nombre_archivo):
@@ -165,6 +168,21 @@ def cargar_csv(nombre_archivo):
         dataset.append(elemento[:10].ljust(10))
     
     return dataset, dict(Counter(dataset))
+
+def comparativa(f_e, f_r,N):
+    errores = [abs((f_r[key] - f_e[key])) for key in f_e]
+    errores_mean = np.mean(errores)
+    errores = np.sum(errores)
+    max_f = max(f_r.values())
+    min_f = min(f_r.values())
+
+    mse = np.sum([(f_r[key] - f_e[key])**2 for key in f_e])/len(f_e)
+    mse_norm = mse/(max_f-min_f)
+
+    errores = [['Media de errores', str("{:.2f}".format(errores_mean))],['Error porcentual', str("{:.2f}".format((errores_mean/N)*100) + '%')],['MSE', str("{:.2f}".format((mse)))], ['RMSE', str("{:.2f}".format((np.sqrt(mse))))],['MSE (Normalizado)', str("{:.2f}".format((mse_norm)))], ['RMSE (Normalizado)', str("{:.2f}".format((np.sqrt(mse_norm))))]]
+    for error in errores:
+        print(f"{error[0]}: {error[1]}")
+
 
 if __name__ == "__main__":
 
@@ -186,17 +204,21 @@ if __name__ == "__main__":
     # Cargamos el dataset
     dataset,frecuencias = cargar_csv(args.d)
     
-    print('Configurando parámetros iniciales... ')
+    #print('Configurando parámetros iniciales... ')
  
     SPF = privateSPF(args.e,args.e2,args.k,args.k2,args.m,args.m2,dataset,args.T)
-    tiempos = SPF.execute()
+    tiempos,frecuencias_estimadas = SPF.execute()
 
+    os.system('cls' if os.name == 'nt' else 'clear>/dev/null')
     if args.verbose_time: 
         if TEST_MODE: 
             for t in tiempos:
                 print(f"{t[0]}: {t[1]}")
+
+            comparativa(frecuencias_estimadas,frecuencias,len(dataset))
         else:
-            print(tiempos + '\n')
+            tabla_tiempos = tabulate(tiempos, headers=["Algoritmo", "Tiempo de Ejecución"], tablefmt="pretty")
+            print(tabla_tiempos + '\n')
 
     
 

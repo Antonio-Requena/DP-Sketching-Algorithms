@@ -1,0 +1,320 @@
+e: 2
+k: 128
+m: 16
+Cliente (Por usuario): 0.01 ms
+Servidor (Actualizar matriz): 0.0102 ms
+Servidor (Estimación individual): 0.1483 ms
+Ancho de banda: 268.000 kB
+Media de errores: 1362.74
+Error porcentual: 0.68%
+MSE: 3222622.51
+RMSE: 1795.17
+MSE (Normalizado): 83.73
+RMSE (Normalizado): 9.15
+Coeficiente correlacion Pearson: -0.1733
+
+
+e: 2
+k: 128
+m: 64
+Cliente (Por usuario): 0.01 ms
+Servidor (Actualizar matriz): 0.0203 ms
+Servidor (Estimación individual): 0.1565 ms
+Ancho de banda: 652.000 kB
+Media de errores: 644.33
+Error porcentual: 0.32%
+MSE: 609410.20
+RMSE: 780.65
+MSE (Normalizado): 15.83
+RMSE (Normalizado): 3.98
+Coeficiente correlacion Pearson: -0.1749
+
+
+e: 2
+k: 128
+m: 256
+Cliente (Por usuario): 0.01 ms
+Servidor (Actualizar matriz): 0.0646 ms
+Servidor (Estimación individual): 0.1499 ms
+Ancho de banda: 2184.000 kB
+Media de errores: 347.65
+Error porcentual: 0.17%
+MSE: 167466.41
+RMSE: 409.23
+MSE (Normalizado): 4.35
+RMSE (Normalizado): 2.09
+Coeficiente correlacion Pearson: -0.1810
+
+
+e: 2
+k: 128
+m: 512
+Cliente (Por usuario): 0.02 ms
+Servidor (Actualizar matriz): 0.1197 ms
+Servidor (Estimación individual): 0.1804 ms
+Ancho de banda: 4236.000 kB
+Media de errores: 403.82
+Error porcentual: 0.20%
+MSE: 342429.79
+RMSE: 585.18
+MSE (Normalizado): 8.90
+RMSE (Normalizado): 2.98
+Coeficiente correlacion Pearson: -0.1663
+
+
+e: 2
+k: 128
+m: 1024
+Cliente (Por usuario): 0.03 ms
+Servidor (Actualizar matriz): 0.2397 ms
+Servidor (Estimación individual): 0.1562 ms
+Ancho de banda: 8332.000 kB
+Media de errores: 299.04
+Error porcentual: 0.15%
+MSE: 159027.11
+RMSE: 398.78
+MSE (Normalizado): 4.13
+RMSE (Normalizado): 2.03
+Coeficiente correlacion Pearson: -0.1790
+
+
+e: 2
+k: 1024
+m: 16
+Cliente (Por usuario): 0.01 ms
+Servidor (Actualizar matriz): 0.0109 ms
+Servidor (Estimación individual): 1.4102 ms
+Ancho de banda: 268.000 kB
+Media de errores: 510.00
+Error porcentual: 0.26%
+MSE: 379281.69
+RMSE: 615.86
+MSE (Normalizado): 9.85
+RMSE (Normalizado): 3.14
+Coeficiente correlacion Pearson: -0.1675
+
+
+e: 2
+k: 1024
+m: 64
+Cliente (Por usuario): 0.01 ms
+Servidor (Actualizar matriz): 0.0200 ms
+Servidor (Estimación individual): 1.2774 ms
+Ancho de banda: 652.000 kB
+Media de errores: 498.86
+Error porcentual: 0.25%
+MSE: 375822.47
+RMSE: 613.04
+MSE (Normalizado): 9.76
+RMSE (Normalizado): 3.12
+Coeficiente correlacion Pearson: -0.1879
+
+
+e: 2
+k: 1024
+m: 256
+Cliente (Por usuario): 0.01 ms
+Servidor (Actualizar matriz): 0.0630 ms
+Servidor (Estimación individual): 1.2545 ms
+Ancho de banda: 2188.000 kB
+Media de errores: 336.98
+Error porcentual: 0.17%
+MSE: 154786.11
+RMSE: 393.43
+MSE (Normalizado): 4.02
+RMSE (Normalizado): 2.01
+Coeficiente correlacion Pearson: -0.1785
+
+
+e: 2
+k: 1024
+m: 512
+Cliente (Por usuario): 0.02 ms
+Servidor (Actualizar matriz): 0.1197 ms
+Servidor (Estimación individual): 1.3385 ms
+Ancho de banda: 4236.000 kB
+Media de errores: 276.91
+Error porcentual: 0.14%
+MSE: 131945.27
+RMSE: 363.24
+MSE (Normalizado): 3.43
+RMSE (Normalizado): 1.85
+Coeficiente correlacion Pearson: -0.1836
+
+
+e: 2
+k: 1024
+m: 1024
+Cliente (Por usuario): 0.03 ms
+Servidor (Actualizar matriz): 0.2350 ms
+Servidor (Estimación individual): 1.3731 ms
+Ancho de banda: 8332.000 kB
+Media de errores: 361.19
+Error porcentual: 0.18%
+MSE: 189213.08
+RMSE: 434.99
+MSE (Normalizado): 4.92
+RMSE (Normalizado): 2.22
+Coeficiente correlacion Pearson: -0.1730
+
+
+e: 2
+k: 32768
+m: 16
+Cliente (Por usuario): 0.01 ms
+Servidor (Actualizar matriz): 0.0100 ms
+Servidor (Estimación individual): 42.9230 ms
+Ancho de banda: 268.000 kB
+Media de errores: 503.37
+Error porcentual: 0.25%
+MSE: 349579.35
+RMSE: 591.25
+MSE (Normalizado): 9.08
+RMSE (Normalizado): 3.01
+Coeficiente correlacion Pearson: -0.1990
+
+
+e: 2
+k: 32768
+m: 64
+Cliente (Por usuario): 0.01 ms
+Servidor (Actualizar matriz): 0.0200 ms
+Servidor (Estimación individual): 43.3132 ms
+Ancho de banda: 652.000 kB
+Media de errores: 347.62
+Error porcentual: 0.17%
+MSE: 201048.68
+RMSE: 448.38
+MSE (Normalizado): 5.22
+RMSE (Normalizado): 2.29
+Coeficiente correlacion Pearson: -0.1699
+
+
+e: 2
+k: 32768
+m: 256
+Cliente (Por usuario): 0.01 ms
+Servidor (Actualizar matriz): 0.0612 ms
+Servidor (Estimación individual): 46.0549 ms
+Ancho de banda: 2188.000 kB
+Media de errores: 292.91
+Error porcentual: 0.15%
+MSE: 125430.26
+RMSE: 354.16
+MSE (Normalizado): 3.26
+RMSE (Normalizado): 1.81
+Coeficiente correlacion Pearson: -0.1803
+
+
+e: 2
+k: 32768
+m: 512
+Cliente (Por usuario): 0.02 ms
+Servidor (Actualizar matriz): 0.1207 ms
+Servidor (Estimación individual): 45.4278 ms
+Ancho de banda: 4236.000 kB
+Media de errores: 378.52
+Error porcentual: 0.19%
+MSE: 193816.18
+RMSE: 440.25
+MSE (Normalizado): 5.04
+RMSE (Normalizado): 2.24
+Coeficiente correlacion Pearson: -0.1709
+
+
+e: 2
+k: 32768
+m: 1024
+Cliente (Por usuario): 0.03 ms
+Servidor (Actualizar matriz): 0.2342 ms
+Servidor (Estimación individual): 44.1769 ms
+Ancho de banda: 8332.000 kB
+Media de errores: 398.18
+Error porcentual: 0.20%
+MSE: 238936.25
+RMSE: 488.81
+MSE (Normalizado): 6.21
+RMSE (Normalizado): 2.49
+Coeficiente correlacion Pearson: -0.1994
+
+
+e: 2
+k: 65536
+m: 16
+Cliente (Por usuario): 0.01 ms
+Servidor (Actualizar matriz): 0.0108 ms
+Servidor (Estimación individual): 76.8505 ms
+Ancho de banda: 268.000 kB
+Media de errores: 392.94
+Error porcentual: 0.20%
+MSE: 224274.21
+RMSE: 473.58
+MSE (Normalizado): 5.83
+RMSE (Normalizado): 2.41
+Coeficiente correlacion Pearson: -0.1763
+
+
+e: 2
+k: 65536
+m: 64
+Cliente (Por usuario): 0.01 ms
+Servidor (Actualizar matriz): 0.0211 ms
+Servidor (Estimación individual): 84.7439 ms
+Ancho de banda: 652.000 kB
+Media de errores: 387.39
+Error porcentual: 0.19%
+MSE: 246107.67
+RMSE: 496.09
+MSE (Normalizado): 6.39
+RMSE (Normalizado): 2.53
+Coeficiente correlacion Pearson: -0.1795
+
+
+e: 2
+k: 65536
+m: 256
+Cliente (Por usuario): 0.01 ms
+Servidor (Actualizar matriz): 0.0624 ms
+Servidor (Estimación individual): 84.1996 ms
+Ancho de banda: 2188.000 kB
+Media de errores: 362.97
+Error porcentual: 0.18%
+MSE: 215744.08
+RMSE: 464.48
+MSE (Normalizado): 5.61
+RMSE (Normalizado): 2.37
+Coeficiente correlacion Pearson: -0.1850
+
+
+e: 2
+k: 65536
+m: 512
+Cliente (Por usuario): 0.02 ms
+Servidor (Actualizar matriz): 0.1181 ms
+Servidor (Estimación individual): 90.5604 ms
+Ancho de banda: 4236.000 kB
+Media de errores: 434.10
+Error porcentual: 0.22%
+MSE: 246403.49
+RMSE: 496.39
+MSE (Normalizado): 6.40
+RMSE (Normalizado): 2.53
+Coeficiente correlacion Pearson: -0.1886
+
+
+e: 2
+k: 65536
+m: 1024
+Cliente (Por usuario): 0.03 ms
+Servidor (Actualizar matriz): 0.2907 ms
+Servidor (Estimación individual): 120.2136 ms
+Ancho de banda: 8332.000 kB
+Media de errores: 365.48
+Error porcentual: 0.18%
+MSE: 166093.39
+RMSE: 407.55
+MSE (Normalizado): 4.32
+RMSE (Normalizado): 2.08
+Coeficiente correlacion Pearson: -0.1866
+
+

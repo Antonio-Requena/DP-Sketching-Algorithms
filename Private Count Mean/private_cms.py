@@ -7,6 +7,7 @@ import argparse
 import time
 from progress.bar import Bar
 from tabulate import tabulate
+import sys
 
 # Enlace con la ruta para las utilidades (funciones de uso comun)
 file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..',  'utils', 'utils.py'))
@@ -69,11 +70,13 @@ class privateCMS:
         bar = Bar('Procesando datos de los clientes', max=len(self.dataset), suffix='%(percent)d%%')
         t_cliente = 0
         t_act = 0
+        size_cliente = 0
         for d in self.dataset:
             inicio = time.time()
             v_i, j_i = self.client(d)
             fin = time.time()
             t_cliente += (fin - inicio) * 1000
+            size_cliente = sys.getsizeof(v_i) + sys.getsizeof(j_i)
 
             inicio = time.time()
             self.actualizar_matriz_sketch(v_i,j_i)
@@ -97,7 +100,7 @@ class privateCMS:
         t_esti = t_esti/len(self.domain)
         
         # Tabla de tiempos de ejecución
-        tiempos = [['Cliente (Por usuario)', str("{:.4f}".format(t_cliente)) + ' ms'],['Servidor (Actualizar matriz)',str("{:.4f}".format(t_act)) + ' ms'],['Servidor (Estimación individual)',str("{:.4f}".format(t_esti)) + ' ms']]
+        tiempos = [['Cliente (Por usuario)', str("{:.2f}".format(t_cliente)) + ' ms'],['Servidor (Actualizar matriz)',str("{:.4f}".format(t_act)) + ' ms'],['Servidor (Estimación individual)',str("{:.4f}".format(t_esti)) + ' ms'],['Ancho de banda',str("{:.3f}".format(size_cliente)) + ' kB']]
 
         return F_estimada, tiempos
 

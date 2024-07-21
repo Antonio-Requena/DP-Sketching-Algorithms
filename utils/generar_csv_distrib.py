@@ -4,8 +4,8 @@ import random
 import string
 
 
-N = 750
-type = 'exp'
+N = 200000
+type = 'norm'
 
 if type == 'exp':
         valores = np.random.exponential(scale=2.0, size=N).astype(int)
@@ -24,4 +24,4 @@ user_ids = list(user_ids)
 
 data = {'user_id': user_ids, 'value': valores}
 df = pd.DataFrame(data)
-df.to_csv('datasets/exp_distrib_750.csv', index=False)
+df.to_csv('datasets/norm_distrib_200k.csv', index=False)

@@ -15,13 +15,13 @@ spec.loader.exec_module(utils)
 
 # Define los valores de los parámetros a variar
 e_values = [2]  # Añade más valores si es necesario
-k_values = [16,128,1024,32768,65536]  # Añade más valores si es necesario
-m_values = [16,64,256,1024]  # Añade más valores si es necesario
-data_values = ['exp_distrib_750','exp_distrib_50k','exp_distrib_1M',]
+k_values = [128,1024,32768,65536]  # Añade más valores si es necesario
+m_values = [16,64,256,512,1024]  # Añade más valores si es necesario
+data_values = ['norm_distrib_200k']
 
 bar = Bar('Procesando ejecuciones', max=len(e_values)*len(k_values)*len(m_values)*len(data_values), suffix='%(percent)d%%')
 for DV in data_values:
-    output_file = f'resultados_tests_{DV}.txt'
+    output_file = f'COSTE_resultados_tests_{DV}.txt'
     with open(output_file, 'w') as f:
         # Itera sobre todas las combinaciones de valores de los parámetros
         for k in k_values:
@@ -29,7 +29,6 @@ for DV in data_values:
                 for e in e_values:
                     # Construye el comando
                     cmd = f'python3 -u private_cms.py -k {k} -m {m} -e {e} -d {DV} --verbose_time'
-                    print(f'\nEjecutando: -e {e} -k {k} -m {m} -d {DV}')
                             
                     # Ejecuta el comando y captura la salida
                     process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -53,7 +52,7 @@ for DV in data_values:
         os.makedirs(destination_folder)
 
     destination_file_path = os.path.join(destination_folder, output_file)
-    shutil.move(file_path, destination_file_path)
+    shutil.move(output_file, destination_file_path)
 
 
 bar.finish()

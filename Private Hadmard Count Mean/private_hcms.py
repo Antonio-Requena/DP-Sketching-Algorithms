@@ -7,6 +7,7 @@ import argparse
 import time
 from progress.bar import Bar
 from tabulate import tabulate
+import sys
 
 # Enlace con la ruta para las utilidades (funciones de uso comun)
 file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..',  'utils', 'utils.py'))
@@ -79,11 +80,13 @@ class privateHCMS:
     def execute(self):
         bar = Bar('Procesando datos de los clientes', max=len(self.dataset), suffix='%(percent)d%%')
         t_cliente = 0
+        size_cliente = 0
         t_act = 0
         for d in self.dataset:
             inicio = time.time()
             w_i, j_i, l_i = self.cliente(d)
             fin = time.time()
+            size_cliente = sys.getsizeof(w_i) + sys.getsizeof(j_i) + sys.getsizeof(l_i)
             t_cliente += (fin - inicio) * 1000
 
             inicio = time.time()
@@ -109,11 +112,9 @@ class privateHCMS:
         t_esti = t_esti/len(self.domain)
 
         # Tabla de tiempos de ejecución
-        tiempos = [['Cliente (Por usuario)', str("{:.4f}".format(t_cliente)) + ' ms'],['Servidor (Actualizar matriz)',str("{:.4f}".format(t_act)) + ' ms'],['Servidor (Estimación individual)',str("{:.4f}".format(t_esti)) + ' ms']]
-        tabla_tiempos = tabulate(tiempos, headers=["Algoritmo", "Tiempo de Ejecución"], tablefmt="pretty")
-
+        tiempos = [['Cliente (Por usuario)', str("{:.4f}".format(t_cliente)) + ' ms'],['Servidor (Actualizar matriz)',str("{:.4f}".format(t_act)) + ' ms'],['Servidor (Estimación individual)',str("{:.4f}".format(t_esti)) + ' ms'],['Ancho de banda',str("{:.3f}".format(size_cliente)) + ' kB']]
         
-        return F_estimada, tabla_tiempos
+        return F_estimada, tiempos
 
 
 
@@ -138,7 +139,8 @@ if __name__ == "__main__":
             for t in tiempos:
                 print(f"{t[0]}: {t[1]}")
         else:
-            print(tiempos + '\n')
+            tabla_tiempos = tabulate(tiempos, headers=["Algoritmo", "Tiempo de Ejecución"], tablefmt="pretty")
+            print(tabla_tiempos + '\n')
     utils.mostrar_resultados(df,f_estimada)
 
 
