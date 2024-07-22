@@ -14,7 +14,8 @@ spec.loader.exec_module(utils)
 
 e_values = [2]
 e2_values = [6]  
-k_values = [256,1024,2048]  # Añade más valores si es necesario
+k_values = [1024,2048]  # Añade más valores si es necesario
+k2_values = [256,1024,2048]  # Añade más valores si es necesario
 m_values = [64,256,1024]  # Añade más valores si es necesario
 data_values = ['anglicismo_50k']
 T = 10
@@ -25,7 +26,7 @@ for DV in data_values:
     with open(output_file, 'w') as f:
         # Itera sobre todas las combinaciones de valores de los parámetros
         for k in k_values:
-            for k2 in k_values:
+            for k2 in k2_values:
                 for m in m_values:
                     for m2 in m_values:
                         for e in e_values:
