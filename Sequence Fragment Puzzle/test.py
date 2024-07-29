@@ -14,13 +14,13 @@ spec.loader.exec_module(utils)
 
 e_values = [2]
 e2_values = [6]  
-k_values = [1024,2048]  # Añade más valores si es necesario
-k2_values = [256,1024,2048]  # Añade más valores si es necesario
-m_values = [64,256,1024]  # Añade más valores si es necesario
+k_values = [256]  # Añade más valores si es necesario
+k2_values = [256]   # Añade más valores si es necesario
+m_values = [64]  # Añade más valores si es necesario
 data_values = ['anglicismo_50k']
-T = 10
+T = [10,20,30,40,50,60,80,100,150,200,250,300,400, 500]
 
-bar = Bar('Procesando ejecuciones', max=len(e_values)*len(k_values)*len(m_values)*len(data_values)*len(k_values)*len(m_values), suffix='%(percent)d%%')
+bar = Bar('Procesando ejecuciones', max=len(e_values)*len(k_values)*len(T)*len(data_values)*len(k_values)*len(m_values), suffix='%(percent)d%%')
 for DV in data_values:
     output_file = f'resultados_tests_{DV}.txt'
     with open(output_file, 'w') as f:
@@ -31,21 +31,22 @@ for DV in data_values:
                     for m2 in m_values:
                         for e in e_values:
                             for e2 in e2_values:
-                                # Construye el comando
-                                cmd = f'python3 -u private_sfp.py -e {e} -e2 {e2} -k {k} -k2 {k2} -m {m} -m2 {m2} -T {T} -d {DV} --verbose_time'
-                                        
-                                # Ejecuta el comando y captura la salida
-                                process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-                                stdout, stderr = process.communicate()
-                                        
-                                # Escribe los parámetros en el archivo
-                                parametros = {'e':e,'e2':e2, 'k':k,'k2':k2,'m':m,'m2':m2,}
-                                for key, value in parametros.items():
-                                    f.write(f"{key}: {value}\n")
-                                f.write(stdout)
-                                f.write('\n'*2)
-                                        
-                                bar.next()
+                                for t in T:
+                                    # Construye el comando
+                                    cmd = f'python3 -u private_sfp.py -e {e} -e2 {e2} -k {k} -k2 {k2} -m {m} -m2 {m2} -T {t} -d {DV} --verbose_time'
+                                            
+                                    # Ejecuta el comando y captura la salida
+                                    process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                                    stdout, stderr = process.communicate()
+                                            
+                                    # Escribe los parámetros en el archivo
+                                    parametros = {'e':e,'e2':e2, 'k':k,'k2':k2,'m':m,'m2':m2,'T':t}
+                                    for key, value in parametros.items():
+                                        f.write(f"{key}: {value}\n")
+                                    f.write(stdout)
+                                    f.write('\n'*2)
+                                            
+                                    bar.next()
             
     utils.parse_txt_to_csv(os.path.abspath(output_file))
     dir_name = os.path.dirname(os.path.abspath(output_file))

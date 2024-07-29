@@ -5,12 +5,12 @@ import os
 import hashlib
 import string
 import re
-import csv
 from collections import Counter
 from progress.bar import Bar
 import argparse
 import time
 from tabulate import tabulate
+import matplotlib.pyplot as plt
 
 TEST_MODE = True
 
@@ -29,8 +29,6 @@ module_name = 'pcms'
 spec = importlib.util.spec_from_file_location(module_name, file_path)
 pcms = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(pcms)
-
-TEST_MODE = True
 
 class privateSPF:
     def __init__(self,epsilon,epsilon_prima,k,k_prima,m,m_prima,dataset,T):
@@ -78,7 +76,7 @@ class privateSPF:
         Q_w = [[]]*256
         alfabeto = string.ascii_lowercase + ' ' # abcdefghijklmnopqrstuvwxyz + espacio
         combinaciones = [a + b for a in alfabeto for b in alfabeto]
-        #bar = Bar('Generando el diccionario', max=len(self.posiciones)*256, suffix='%(percent)d%%')
+        bar = Bar('Generando el diccionario', max=len(self.posiciones)*256, suffix='%(percent)d%%')
 
         for l in self.posiciones:
             pos = self.posiciones.index(l)
@@ -87,15 +85,15 @@ class privateSPF:
             dict = {}
             # Iterar sobre los valores w de 0 a 255
             for w in range(256):
-                #bar.next()
+                bar.next()
                 for c in combinaciones:
                     clave = str(w) + c
                     dict[clave] = self.CMS_2[pos].estimar_d(clave)
 
             # Seleccionamos las T más frecuentes
-            Q_l[pos] = sorted(dict, key=dict.get, reverse=True)[:T]
+            Q_l[pos] = sorted(dict, key=dict.get, reverse=True)[:self.T]
 
-        #bar.finish()
+        bar.finish()
 
         for w in range(256):
             q_l =  [[] for _ in range(len(self.posiciones))]
@@ -121,7 +119,7 @@ class privateSPF:
         return X
 
     def execute(self):
-        #bar = Bar('Procesando datos de los clientes', max=len(self.dataset), suffix='%(percent)d%%')
+        bar = Bar('Procesando datos de los clientes', max=len(self.dataset), suffix='%(percent)d%%')
         t_cliente = 0
         t_server = 0
 
@@ -135,8 +133,8 @@ class privateSPF:
             self.servidor(alpha, beta, l)
             fin = time.time()
             t_server += (fin - inicio) * 1000
-            #bar.next()
-        #bar.finish()
+            bar.next()
+        bar.finish()
         t_cliente = t_cliente/len(self.dataset)
         t_server = t_server/len(self.dataset)
         
@@ -170,19 +168,45 @@ def cargar_csv(nombre_archivo):
     return dataset, dict(Counter(dataset))
 
 def comparativa(f_e, f_r,N):
-    errores = [abs((f_r[key] - f_e[key])) for key in f_e]
+    errores = []
+    errores_mse = []
+    for key in f_e:
+        if key in f_r:
+            errores.append(abs((f_r[key] - f_e[key])))
+            errores_mse.append((f_r[key] - f_e[key])**2 )
+        else:
+            errores.append(abs((- f_e[key])))
+            errores_mse.append((- f_e[key])**2) 
+
     errores_mean = np.mean(errores)
     errores = np.sum(errores)
     max_f = max(f_r.values())
     min_f = min(f_r.values())
 
-    mse = np.sum([(f_r[key] - f_e[key])**2 for key in f_e])/len(f_e)
+    mse = np.sum(errores_mse)/len(f_e)
     mse_norm = mse/(max_f-min_f)
 
-    errores = [['Media de errores', str("{:.2f}".format(errores_mean))],['Error porcentual', str("{:.2f}".format((errores_mean/N)*100) + '%')],['MSE', str("{:.2f}".format((mse)))], ['RMSE', str("{:.2f}".format((np.sqrt(mse))))],['MSE (Normalizado)', str("{:.2f}".format((mse_norm)))], ['RMSE (Normalizado)', str("{:.2f}".format((np.sqrt(mse_norm))))]]
+    errores = [['Suma errores', str("{:.2f}".format(errores))],['Media de errores', str("{:.2f}".format(errores_mean))],['Error porcentual', str("{:.2f}".format((errores_mean/N)*100) + '%')],['MSE', str("{:.2f}".format((mse)))], ['RMSE', str("{:.2f}".format((np.sqrt(mse))))],['MSE (Normalizado)', str("{:.2f}".format((mse_norm)))], ['RMSE (Normalizado)', str("{:.2f}".format((np.sqrt(mse_norm))))],['N Cadenas', len(f_e)]]
     for error in errores:
         print(f"{error[0]}: {error[1]}")
 
+def mostrar_grafica(data):
+    # Extraer las cadenas y sus frecuencias
+    labels = list(data.keys())
+    frequencies = list(data.values())
+
+    # Crear el gráfico de barras
+    plt.figure(figsize=(10, 6))
+    plt.bar(labels, frequencies, color='skyblue')
+
+    plt.xlabel('Cadenas candidatas')
+    plt.ylabel('Frecuencia estimada')
+
+    # Rotar las etiquetas del eje x si es necesario
+    plt.xticks(rotation=45)
+
+    # Mostrar el gráfico
+    plt.show()
 
 if __name__ == "__main__":
 
@@ -209,9 +233,9 @@ if __name__ == "__main__":
     SPF = privateSPF(args.e,args.e2,args.k,args.k2,args.m,args.m2,dataset,args.T)
     tiempos,frecuencias_estimadas = SPF.execute()
 
-    os.system('cls' if os.name == 'nt' else 'clear>/dev/null')
     if args.verbose_time: 
         if TEST_MODE: 
+            os.system('cls' if os.name == 'nt' else 'clear>/dev/null')
             for t in tiempos:
                 print(f"{t[0]}: {t[1]}")
 
@@ -219,6 +243,7 @@ if __name__ == "__main__":
         else:
             tabla_tiempos = tabulate(tiempos, headers=["Algoritmo", "Tiempo de Ejecución"], tablefmt="pretty")
             print(tabla_tiempos + '\n')
+            mostrar_grafica(frecuencias_estimadas)
 
     
 
