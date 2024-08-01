@@ -12,7 +12,7 @@ import time
 from tabulate import tabulate
 import matplotlib.pyplot as plt
 
-TEST_MODE = True
+TEST_MODE = False
 
 # Enlace con la ruta para las utilidades (funciones de uso comun)
 file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..',  'utils', 'utils.py'))
