@@ -1,0 +1,12 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+
+# Ignorar archivos .txt
+*.txt
+
+# Ignorar archivos .csv
+*.csv
+
+# Ignorar archivos de Python que comiencen con "test"
+test*.py
+
