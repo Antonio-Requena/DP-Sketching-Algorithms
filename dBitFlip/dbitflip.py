@@ -16,7 +16,7 @@ spec = importlib.util.spec_from_file_location(module_name, file_path)
 utils = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(utils)
 
-TEST_MODE = True
+TEST_MODE = False
 class dBitFlip:
     def __init__(self, dataset, epsilon, domain, d):
         self.dataset = dataset
@@ -73,7 +73,7 @@ class dBitFlip:
         t_cliente = t_cliente/len(self.dataset)
         
         t_server = 0
-        print('\n' + 'Ejecutando algortimo del servidor' + '\n')
+        #print('\n' + 'Ejecutando algortimo del servidor' + '\n')
         inicio = time.time()
         F_estimada = self.estimar_frecuencias(vectores_priv)
         fin = time.time()
@@ -81,10 +81,8 @@ class dBitFlip:
 
         # Tabla de tiempos de ejecución
         tiempos = [['Cliente (Por usuario)', str("{:.4f}".format(t_cliente)) + ' ms'],['Servidor (Estimar frecuencias)',str("{:.4f}".format(t_server)) + ' ms']]
-        tabla_tiempos = tabulate(tiempos, headers=["Algoritmo", "Tiempo de Ejecución"], tablefmt="pretty")
-
-
-        return F_estimada, tabla_tiempos
+        
+        return F_estimada, tiempos
 
 
 if __name__ == '__main__':
@@ -106,7 +104,8 @@ if __name__ == '__main__':
             for t in tiempos:
                 print(f"{t[0]}: {t[1]}")
         else:
-            print(tiempos + '\n')
+            tabla_tiempos = tabulate(tiempos, headers=["Algoritmo", "Tiempo de Ejecución"], tablefmt="pretty")
+            print(tabla_tiempos + '\n')
     utils.mostrar_resultados(df,f_estimada)
 
  

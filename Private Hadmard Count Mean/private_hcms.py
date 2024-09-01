@@ -17,7 +17,7 @@ spec = importlib.util.spec_from_file_location(module_name, file_path)
 utils = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(utils)
 
-TEST_MODE = True
+TEST_MODE = False
 
 class privateHCMS:
     def __init__(self,epsilon,k,m, dataset, domain):

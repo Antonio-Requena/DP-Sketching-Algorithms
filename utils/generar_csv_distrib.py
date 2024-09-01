@@ -3,8 +3,8 @@ import pandas as pd
 import random
 import string
 
-N = [50,300,900,2500,60000,350000,1000000,2500000]
-type = 'exp'
+N = [50,300,900]
+type = 'norm'
 
 def generate_user_id(length=10):
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))

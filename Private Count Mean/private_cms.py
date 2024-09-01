@@ -17,7 +17,7 @@ spec = importlib.util.spec_from_file_location(module_name, file_path)
 utils = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(utils)
 
-TEST_MODE = True
+TEST_MODE = False
 
 class privateCMS:
     def __init__(self,epsilon,k,m, dataset, domain):
@@ -100,7 +100,7 @@ class privateCMS:
         t_esti = t_esti/len(self.domain)
         
         # Tabla de tiempos de ejecución
-        tiempos = [['Cliente (Por usuario)', str("{:.2f}".format(t_cliente)) + ' ms'],['Servidor (Actualizar matriz)',str("{:.4f}".format(t_act)) + ' ms'],['Servidor (Estimación individual)',str("{:.4f}".format(t_esti)) + ' ms'],['Ancho de banda',str("{:.3f}".format(size_cliente)) + ' kB']]
+        tiempos = [['Cliente (Por usuario)', str("{:.4f}".format(t_cliente)) + ' ms'],['Servidor (Actualizar matriz)',str("{:.4f}".format(t_act)) + ' ms'],['Servidor (Estimación individual)',str("{:.4f}".format(t_esti)) + ' ms'],['Ancho de banda',str("{:.3f}".format(size_cliente)) + ' kB']]
 
         return F_estimada, tiempos
 

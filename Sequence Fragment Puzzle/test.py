@@ -18,12 +18,14 @@ k_values = [256]  # Añade más valores si es necesario
 k2_values = [256]   # Añade más valores si es necesario
 m_values = [64]  # Añade más valores si es necesario
 data_values = ['anglicismo_50k']
-T = [10,20,30,40,50,60,80,100,150,200,250,300,400, 500]
+T = [10]
+data_values = [50,300,750,900,2500,15000,60000, 200000,350000, 1000000,2400000]
+output_file = f'resultados_tests.txt'
 
 bar = Bar('Procesando ejecuciones', max=len(e_values)*len(k_values)*len(T)*len(data_values)*len(k_values)*len(m_values), suffix='%(percent)d%%')
-for DV in data_values:
-    output_file = f'resultados_tests_{DV}.txt'
-    with open(output_file, 'w') as f:
+with open(output_file, 'w') as f:
+    for n in data_values:
+        DV = f'anglicismo_{n}'
         # Itera sobre todas las combinaciones de valores de los parámetros
         for k in k_values:
             for k2 in k2_values:
@@ -34,13 +36,13 @@ for DV in data_values:
                                 for t in T:
                                     # Construye el comando
                                     cmd = f'python3 -u private_sfp.py -e {e} -e2 {e2} -k {k} -k2 {k2} -m {m} -m2 {m2} -T {t} -d {DV} --verbose_time'
-                                            
+                                    print(cmd)
                                     # Ejecuta el comando y captura la salida
                                     process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
                                     stdout, stderr = process.communicate()
                                             
                                     # Escribe los parámetros en el archivo
-                                    parametros = {'e':e,'e2':e2, 'k':k,'k2':k2,'m':m,'m2':m2,'T':t}
+                                    parametros = {'N':n}
                                     for key, value in parametros.items():
                                         f.write(f"{key}: {value}\n")
                                     f.write(stdout)

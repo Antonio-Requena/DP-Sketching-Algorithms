@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from tabulate import tabulate
 from scipy.stats import pearsonr
 
-TEST_MODE = True#(ACTIVAR para test)
+TEST_MODE = False#(ACTIVAR para test)
 
 
 def create_dataset(N:int, type:str)->tuple[list,pd.DataFrame,list]:
