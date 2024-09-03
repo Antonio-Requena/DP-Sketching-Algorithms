@@ -13,7 +13,7 @@ First, clone this repository to your local machine using the following command:
 
 ```bash
 git clone https://github.com/Antonio-Requena/DP-Sketching-Algorithms
-cd your-repo
+cd DP-Sketching-Algorithms
 ```
 
 ### 2. Create and activate a virtual environment
