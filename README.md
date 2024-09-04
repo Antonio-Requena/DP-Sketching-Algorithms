@@ -1,5 +1,5 @@
 # $\varepsilon$-DP Sketching Algorithims
-This repository contains several Python scripts that require specific dependencies to run correctly. Follow the instructions below to set up the environment.
+This repository contains the source code for my Bachelor's Degree Final Project, which focuses on the implementation of algorithms that combine $\varepsilon$-differential privacy and sketching techniques. These algorithms ensure information privacy while using probabilistic data structures to obtain estimated analytics in terms of frequency over various datasets in CSV format.
 
 ## Prerequisites
 
