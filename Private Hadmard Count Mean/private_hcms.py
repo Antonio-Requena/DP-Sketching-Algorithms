@@ -21,7 +21,6 @@ TEST_MODE = False
 
 class privateHCMS:
     def __init__(self,epsilon,k,m, dataset, domain):
-        # Inicialización de parámetros
         self.epsilon = epsilon
         self.k = k
         self.m = m

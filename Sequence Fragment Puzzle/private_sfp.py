@@ -32,7 +32,6 @@ spec.loader.exec_module(pcms)
 
 class privateSPF:
     def __init__(self,epsilon,epsilon_prima,k,k_prima,m,m_prima,dataset,T):
-        # Inicialización de parámetros
         self.epsilon = epsilon
         self.epsilon_2 = epsilon_prima
         self.k = k
@@ -191,28 +190,21 @@ def comparativa(f_e, f_r,N):
         print(f"{error[0]}: {error[1]}")
 
 def mostrar_grafica(data):
-    # Extraer las cadenas y sus frecuencias
     labels = list(data.keys())
     frequencies = list(data.values())
 
-    # Crear el gráfico de barras
     plt.figure(figsize=(10, 6))
     plt.bar(labels, frequencies, color='skyblue')
-
     plt.xlabel('Cadenas candidatas')
     plt.ylabel('Frecuencia estimada')
-
-    # Rotar las etiquetas del eje x si es necesario
     plt.xticks(rotation=45)
 
-    # Mostrar el gráfico
     plt.show()
 
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Algoritmo Sequence Fragment Puzzle para la estimación de frecuencias a partir de un diccionario desconocido.")
     
-    # Añadimos los argumentos requeridos
     parser.add_argument("-e", type=int, required=True, help="Epsilon.")
     parser.add_argument("-e2", type=int, required=True, help="Epsilon prima.")
     parser.add_argument("-k", type=int, required=True, help="k (Número de filas de la matriz de sketch para la secuencia).")
@@ -225,10 +217,7 @@ if __name__ == "__main__":
     
     args = parser.parse_args()
 
-    # Cargamos el dataset
     dataset,frecuencias = cargar_csv(args.d)
-    
-    #print('Configurando parámetros iniciales... ')
  
     SPF = privateSPF(args.e,args.e2,args.k,args.k2,args.m,args.m2,dataset,args.T)
     tiempos,frecuencias_estimadas = SPF.execute()

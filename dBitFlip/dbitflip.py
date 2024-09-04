@@ -73,7 +73,7 @@ class dBitFlip:
         t_cliente = t_cliente/len(self.dataset)
         
         t_server = 0
-        #print('\n' + 'Ejecutando algortimo del servidor' + '\n')
+        
         inicio = time.time()
         F_estimada = self.estimar_frecuencias(vectores_priv)
         fin = time.time()
