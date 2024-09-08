@@ -47,8 +47,62 @@ pip install -r requirements.txt
 Once the dependencies are installed, you can run any of the Python algoritmhs in the repository without any issues:
 
 ```bash
-python your_script_name.py
+python algorithm_name.py
 ```
+
+## Repository Structure
+
+The repository is organized into five main directories, each containing the corresponding Python implementation of an algorithm and the experimental results obtained from the experiments described in the final degree project (PDF). Below is a detailed breakdown of the repository structure:
+```
+
+.
+├── Private Count Mean Sketch/
+│   ├── private_cms.py                  # Python file containing the implementation of the "Private Count Mean Sketch" algorithm.
+│   └── Experimental results/
+│       └── results_*.csv               # CSV files with experimental results for this algorithm.
+├── Private Hadamard Count Mean Sketch/
+│   ├── private_Hcms.py                 # Python file containing the implementation of the "Private Hadamard Count Mean Sketch" algorithm.
+│   └── Experimental results/
+│       └── results_*.csv               # CSV files with experimental results for this algorithm.
+├── RAPPOR/
+│   ├── rappor.py                       # Python file containing the implementation of the "RAPPOR" algorithm.
+|   ├── bloomfilter.py                  # Python file containing functions used in the "RAPPOR" algorithm.
+│   └── Experimental results/
+│       └── results_*.csv               # CSV files with experimental results for this algorithm.
+├── Sequence Fragment Puzzle/
+│   ├── private_sfp.py                  # Python file containing the implementation of the "Sequence Fragment Puzzle" algorithm.
+│   └── Experimental results/
+│       └── results_*.csv               # CSV files with experimental results for this algorithm.
+├── dBitFlip/
+│   ├── dbitflip.py                     # Python file containing the implementation of the "dBitFlip" algorithm.
+│   └── Experimental results/
+│       └── results_*.csv               # CSV files with experimental results for this algorithm.
+├── utils/
+│   ├── utils.py                        # Contains utility functions used across the algorithms (e.g., data I/O, graphical result displays).
+│   ├── generar_csv_distrib.py          # Script to generate synthetic datasets for numeric distribution experiments.
+│   ├── generar_csv_puzzle.py           # Script to generate datasets for the "Sequence Fragment Puzzle" algorithm.
+│   └── datasets/
+│       └── *.csv                       # Directory with all datasets used in the experiments. Users can add their own datasets here.
+├── .gitignore                          # Specifies files and directories to ignore in Git version control.
+├── README.md                           # This file, explaining the repository structure and usage.
+├── TFG_AntonioRequena.pdf              # The final degree project document in PDF format.
+└── requirements.txt                    # Lists Python dependencies needed to set up a virtual environment.
+
+
+```
+
+To execute any of the algorithms, navigate to the corresponding folder of the desired algorithm and follow the instructions provided in the [Available Algorithms](#available-algorithms) section.
+
+For example:
+```bash
+cd Private Count Mean Sketch/
+python3 -u private_cms.py -k 16 -m 1024 -e 0.5 -d norm_distrib_60000
+```
+
+### Custom Datasets
+
+If you wish to use a custom dataset for the experiments, simply add it to the `utils/datasets/` directory. Ensure that the dataset has the same structure as the existing ones (i.e., the same columns), as described in the final degree project document [TFG_AntonioRequena](./TFG_AntonioRequena.pdf).
+
 
 ## Available Algorithms
 
@@ -235,7 +289,7 @@ The **Sequence Fragment Puzzle** algorithm estimates frequencies from an unknown
 - **`-d` (`str`)**: The name of the dataset used (e.g., `my_dataset.csv`).
 - **`--verbose_time` (optional)**: Use this flag if you want to print the execution time of the functions.
 
-### Command to Run
+##### How to Run 👨🏻‍💻 
 
 For **Mac/Linux**:
 ```bash
