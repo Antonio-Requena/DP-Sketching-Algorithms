@@ -1,5 +1,7 @@
 # $\varepsilon$-DP Sketching Algorithims
-This repository contains the source code for my Bachelor's Degree Final Project, which focuses on the implementation of algorithms that combine $\varepsilon$-differential privacy and sketching techniques. These algorithms ensure information privacy while using probabilistic data structures to obtain estimated analytics in terms of frequency over various datasets in CSV format.
+The current technological landscape requires the continuous collection of information from a large number of users. This is essential for developing personalized products and services, improving operational efficiency, and gaining competitive advantages in the market. However, the ongoing collection of information about a large number of users poses significant challenges in terms of privacy and security. Users are increasingly aware of the risks associated with exposing their personal data and are demanding higher levels of protection. At the same time, cybercrime is constantly growing, with increasingly sophisticated attacks compromising the integrity and security of data. For these reasons, leading technology companies are investing in research focused on developing techniques to obtain efficient analytics from massive datasets, while preserving user privacy and security. 
+
+In this context, $\varepsilon$-differential privacy methods allow for statistical analysis on datasets without revealing specific information about individuals. Their combination with probabilistic data structures, especially data sketches, provides the capability to store information from massive data streams in a compact manner. This repository contains the source code for my Bachelor's Degree Final Project, which focuses on the implementation of algorithms that combine $\varepsilon$-differential privacy and sketching techniques. These algorithms ensure information privacy while using probabilistic data structures to obtain estimated analytics in terms of frequency over various datasets in CSV format.
 
 ## Prerequisites
 
@@ -50,11 +52,10 @@ Once the dependencies are installed, you can run any of the Python algoritmhs in
 python algorithm_name.py
 ```
 
-## Repository Structure
+## Repository Structure :seedling:
 
 The repository is organized into five main directories, each containing the corresponding Python implementation of an algorithm and the experimental results obtained from the experiments described in the final degree project (PDF). Below is a detailed breakdown of the repository structure:
 ```
-
 .
 ├── Private Count Mean Sketch/
 │   ├── private_cms.py                  # Python file containing the implementation of the "Private Count Mean Sketch" algorithm.
@@ -88,7 +89,6 @@ The repository is organized into five main directories, each containing the corr
 ├── TFG_AntonioRequena.pdf              # The final degree project document in PDF format.
 └── requirements.txt                    # Lists Python dependencies needed to set up a virtual environment.
 
-
 ```
 
 To execute any of the algorithms, navigate to the corresponding folder of the desired algorithm and follow the instructions provided in the [Available Algorithms](#available-algorithms) section.
@@ -99,7 +99,7 @@ cd Private Count Mean Sketch/
 python3 -u private_cms.py -k 16 -m 1024 -e 0.5 -d norm_distrib_60000
 ```
 
-### Custom Datasets
+### Custom Datasets :page_facing_up:
 
 If you wish to use a custom dataset for the experiments, simply add it to the `utils/datasets/` directory. Ensure that the dataset has the same structure as the existing ones (i.e., the same columns), as described in the final degree project document [TFG_AntonioRequena](./TFG_AntonioRequena.pdf).
 
