@@ -273,7 +273,7 @@ python dbitflip.py -d 1 -e 2 -D norm_distrib_60000 --verbose_time
 
 ---
 
-### **Sequence Fragment Puzzle** Algorithm**
+### **Sequence Fragment Puzzle** 
 
 The **Sequence Fragment Puzzle** algorithm estimates frequencies from an unknown dictionary. This section explains how to run the algorithm from the command line, including the required parameters.
 
