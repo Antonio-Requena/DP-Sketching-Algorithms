@@ -86,7 +86,7 @@ The repository is organized into five main directories, each containing the corr
 │       └── *.csv                       # Directory with all datasets used in the experiments. Users can add their own datasets here.
 ├── .gitignore                          # Specifies files and directories to ignore in Git version control.
 ├── README.md                           # This file, explaining the repository structure and usage.
-├── TFG_AntonioRequena.pdf              # The final degree project document in PDF format.
+├── TFG_Document.pdf                    # The final degree project document in PDF format.
 └── requirements.txt                    # Lists Python dependencies needed to set up a virtual environment.
 
 ```
