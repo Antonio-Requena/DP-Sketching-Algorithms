@@ -101,7 +101,7 @@ python3 -u private_cms.py -k 16 -m 1024 -e 0.5 -d norm_distrib_60000
 
 ### Custom Datasets :page_facing_up:
 
-If you wish to use a custom dataset for the experiments, simply add it to the `utils/datasets/` directory. Ensure that the dataset has the same structure as the existing ones (i.e., the same columns), as described in the final degree project document [TFG_AntonioRequena](./TFG_AntonioRequena.pdf).
+If you wish to use a custom dataset for the experiments, simply add it to the `utils/datasets/` directory. Ensure that the dataset has the same structure as the existing ones (i.e., the same columns), as described in [the final degree project document](./TFG_Document.pdf).
 
 
 ## Available Algorithms
