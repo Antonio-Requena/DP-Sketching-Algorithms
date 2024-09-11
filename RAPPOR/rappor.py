@@ -100,7 +100,7 @@ class Rappor:
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description="Algoritmo RAPPOR para la estimación de frecuencias a partir de un conjunto de candidatos.")
+    parser = argparse.ArgumentParser(description="Algoritmo RAPPOR para la estimación de frecuencias a partir de un conjunto de candidatos.",add_help=False)
     parser.add_argument("-k", type=int, required=True, help="m (Numero de bits de los filtros de bloom a emplear).")
     parser.add_argument("-h", type=int, required=True, help="k (Número de funciones hash empleadas).")
     parser.add_argument("-f", type=float, required=True, help="f (Probabilidad de perturbación permatente [0-1]).")
